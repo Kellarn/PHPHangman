@@ -20,7 +20,10 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response() {
-		$message = '';
+		if($_SERVER["REQUEST_METHOD"] == "POST"){
+			echo "Got here";
+		}
+		$message = 'Missing username';
 		
 		$response = $this->generateLoginFormHTML($message);
 		//$response .= $this->generateLogoutButtonHTML($message);
