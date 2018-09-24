@@ -1,5 +1,8 @@
 <?php
 
+// require_once("model/login.php");
+
+
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -9,6 +12,12 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+
+	private $loginModel;
+
+	public function __construct(model\login $loginModel){
+		$this->loginModel = $loginModel;
+	}
 
 	
 
@@ -20,10 +29,10 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response() {
-		if($_SERVER["REQUEST_METHOD"] == "POST"){
-			echo "Got here";
-		}
-		$message = 'Missing username';
+		// $LoginModel = new LoginModel();
+		echo $this->loginModel->sendMessage();
+		$message = $this->getRequestUserName();
+		echo $this->getRequestPassword();
 		
 		$response = $this->generateLoginFormHTML($message);
 		//$response .= $this->generateLogoutButtonHTML($message);
@@ -73,7 +82,26 @@ class LoginView {
 	
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	private function getRequestUserName() {
+
+		if($_SERVER["REQUEST_METHOD"] == "POST"){
+			$fetchedName = $_POST[self::$name];
+			if(empty($fetchedName)){
+				return "No username found";
+			} else {
+				return $fetchedName; //$_GET[self::$name];
+			}
+		}
 		//RETURN REQUEST VARIABLE: USERNAME
+	}
+
+	private function getRequestPassword() {
+		if($_SERVER["REQUEST_METHOD"] == "POST"){
+			if(empty($_POST[self::$password])){
+				return "No password in input field";
+			} else {
+				return $_POST[self::$password];
+			}
+		}
 	}
 	
 }
