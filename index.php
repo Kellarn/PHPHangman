@@ -18,6 +18,16 @@ $dtv = new DateTimeView();
 $lv = new LayoutView();
 
 
-$lv->render(false, $v, $dtv);
+if(session_status() == 1){
+    $lv->render(false, $v, $dtv);
+    echo session_status();
+} else {
+    echo session_status();
+    echo "Hello";
+    if($_SESSION["isLoggedIn"] == true){
+        $lv->render(true, $v, $dtv);
+    }
+}
+
 
 

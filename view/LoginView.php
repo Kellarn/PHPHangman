@@ -30,9 +30,10 @@ class LoginView {
 	 */
 	public function response() {
 		// $LoginModel = new LoginModel();
-		echo $this->loginModel->sendMessage();
-		$message = $this->getRequestUserName();
-		echo $this->getRequestPassword();
+		// echo $this->loginModel->sendMessage();
+		$username = $this->getRequestUserName();
+		$password = $this->getRequestPassword();
+		$message = $this->loginModel->sql($username, $password);
 		
 		$response = $this->generateLoginFormHTML($message);
 		//$response .= $this->generateLogoutButtonHTML($message);
