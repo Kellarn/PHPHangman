@@ -4,7 +4,7 @@
 require_once('view/LoginView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
-require_once('model/login.php');
+require_once('model/Login.php');
 
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
@@ -18,16 +18,6 @@ $dtv = new DateTimeView();
 $lv = new LayoutView();
 
 
-if(session_status() == 1){
-    $lv->render(false, $v, $dtv);
-    echo session_status();
-} else {
-    echo session_status();
-    echo "Hello";
-    if($_SESSION["isLoggedIn"] == true){
-        $lv->render(true, $v, $dtv);
-    }
-}
-
+$lv->render(false, $v, $dtv);
 
 

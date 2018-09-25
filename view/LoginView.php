@@ -13,6 +13,8 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 
+	private static $getUsername = '';
+
 	private $loginModel;
 
 	public function __construct(model\login $loginModel){
@@ -31,12 +33,25 @@ class LoginView {
 	public function response() {
 		// $LoginModel = new LoginModel();
 		// echo $this->loginModel->sendMessage();
-		$username = $this->getRequestUserName();
+		$message = '';
+		$username = $this->postRequestUserName();
 		$password = $this->getRequestPassword();
-		$message = $this->loginModel->sql($username, $password);
-		
-		$response = $this->generateLoginFormHTML($message);
-		//$response .= $this->generateLogoutButtonHTML($message);
+
+		if($_SERVER["REQUEST_METHOD"] == "POST"){
+			self::$getUsername = $this->postRequestUserName();
+			if(empty($username)) {
+				$message = "Username is missing";
+			} else if(empty($password)){
+				$message = "Password is missing";
+			} else {
+				$message = $this->loginModel->sql($this->postRequestUserName(), $this->getRequestPassword());
+			}
+		}
+		if($message == "Welcome"){
+			$response = $this->generateLogoutButtonHTML($message);
+		} else {
+			$response = $this->generateLoginFormHTML($message);
+		}
 		return $response;
 	}
 
@@ -67,7 +82,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="'. self::$getUsername . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
@@ -83,25 +98,21 @@ class LoginView {
 	
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	private function getRequestUserName() {
-
-		if($_SERVER["REQUEST_METHOD"] == "POST"){
-			$fetchedName = $_POST[self::$name];
-			if(empty($fetchedName)){
-				return "No username found";
-			} else {
-				return $fetchedName; //$_GET[self::$name];
+			if(isset($_GET[self::$name])){
+				return $_GET[self::$name];
 			}
-		}
 		//RETURN REQUEST VARIABLE: USERNAME
 	}
 
 	private function getRequestPassword() {
 		if($_SERVER["REQUEST_METHOD"] == "POST"){
-			if(empty($_POST[self::$password])){
-				return "No password in input field";
-			} else {
-				return $_POST[self::$password];
-			}
+			return $_POST[self::$password];
+		}
+	}
+
+	private function postRequestUserName(){
+		if($_SERVER["REQUEST_METHOD"] == "POST"){
+			return $_POST[self::$name];
 		}
 	}
 	

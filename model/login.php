@@ -2,19 +2,18 @@
 
 namespace Model;
 // Include config file
-// require_once "config.php";
+require_once("environment.php");
 
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'lab2');
- 
+
+
+// session_start();
 
 class Login {
     private static $link;
 
+
     public function __construct(){
-        self::$link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+        self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
     }
  
 private function connectToSql() {
@@ -34,20 +33,6 @@ public function sql($username, $password) {
     // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
-    // Check if username is empty
-    /* if(empty(trim($_POST[$username]))){
-        $username_err = "Please enter username.";
-    } else{
-        $username = trim($_POST["username"]);
-    }
-    
-    // Check if password is empty
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter your password.";
-    } else{
-        $password = trim($_POST["password"]);
-    }
-    */
     // Validate credentials
     if(!empty($username) && !empty($password)){
         // Prepare a select statement
@@ -60,7 +45,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // var_dump($stmt);
             // Set parameters
             $param_username = $username;
-            echo $param_username;
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
@@ -79,18 +63,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Store data in session variables
                             $_SESSION["isLoggedIn"] = true;
                             // $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
+                            $_SESSION["username"] = $username;
+                            return "Welcome";
                             
                             // Redirect user to welcome page
                             // header("location: welcome.php");
                         } else{
                             // Display an error message if password is not valid
-                            return "The password you entered was not valid.";
+                            return "Wrong name or password";
                         }
                     }
                 } else{
                     // Display an error message if username doesn't exist
-                    return "No account found with that username.";
+                    return "Wrong name or password";
                 }
             } else{
                 return "Oops! Something went wrong. Please try again later.";
