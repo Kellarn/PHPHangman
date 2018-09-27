@@ -7,6 +7,7 @@ require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('model/Login.php');
 require_once('controller/LoginController.php');
+require_once('view/RegisterView.php');
 
 //var_dump($_SESSION["isLoggedIn"]);
 
@@ -19,9 +20,9 @@ $login = new \model\Login();
 $v = new \view\LoginView($login);
 $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
+$rv = new \view\RegisterView();
 
-$app = new \controller\LoginController($v, $lv, $dtv);
-$app->check();
+$app = new \controller\LoginController($v, $lv, $dtv, $rv);
 $app->renderPage();
 
 
