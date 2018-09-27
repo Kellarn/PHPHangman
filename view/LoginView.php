@@ -1,6 +1,7 @@
 <?php
 
 // require_once("model/login.php");
+namespace view;
 
 
 class LoginView {
@@ -17,7 +18,7 @@ class LoginView {
 
 	private $loginModel;
 
-	public function __construct(model\login $loginModel){
+	public function __construct(\model\login $loginModel){
 		$this->loginModel = $loginModel;
 	}
 
@@ -34,21 +35,32 @@ class LoginView {
 		// $LoginModel = new LoginModel();
 		// echo $this->loginModel->sendMessage();
 		$message = '';
-		$username = $this->postRequestUserName();
-		$password = $this->getRequestPassword();
 
 		if($_SERVER["REQUEST_METHOD"] == "POST"){
-			self::$getUsername = $this->postRequestUserName();
-			if(empty($username)) {
-				$message = "Username is missing";
-			} else if(empty($password)){
-				$message = "Password is missing";
+			if(isset($_POST[self::$logout])){
+				session_destroy();
+				$_SESSION = [];
+				$message = "Bye bye!";
+				$response = $this->generateLoginFormHTML($message);
+				// return $response;
 			} else {
-				$message = $this->loginModel->sql($this->postRequestUserName(), $this->getRequestPassword());
+				$username = $this->postRequestUserName();
+		        $password = $this->getRequestPassword();
+				self::$getUsername = $this->postRequestUserName();
+			    if(empty($username)) {
+					$message = "Username is missing";
+					$response = $this->generateLoginFormHTML($message);
+			    } else if(empty($password)){
+					$message = "Password is missing";
+					$response = $this->generateLoginFormHTML($message);
+			    } else {
+				   $message = $this->loginModel->sql($this->postRequestUserName(), $this->getRequestPassword());
+				   $response = $this->generateLoginFormHTML($message);
+				   if(isset($_SESSION["isLoggedIn"])){
+					$response = $this->generateLogoutButtonHTML($message);
+				   }
+			    }
 			}
-		}
-		if($message == "Welcome"){
-			$response = $this->generateLogoutButtonHTML($message);
 		} else {
 			$response = $this->generateLoginFormHTML($message);
 		}

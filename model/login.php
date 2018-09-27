@@ -57,15 +57,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     if(mysqli_stmt_fetch($stmt)){
 
                         if($password == $hashed_password){
-                            // session_destroy();
+                            
+                            session_destroy();
                             // Password is correct, so start a new session
                             session_start();
                             // Store data in session variables
                             $_SESSION["isLoggedIn"] = true;
                             // $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;
+                            // $_SESSION["username"] = $username;
                             return "Welcome";
-                            
                             // Redirect user to welcome page
                             // header("location: welcome.php");
                         } else{

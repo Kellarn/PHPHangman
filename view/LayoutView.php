@@ -1,9 +1,11 @@
 <?php
 
+namespace view;
 
 class LayoutView {
   
-  public function render($isLoggedIn, LoginView $v, DateTimeView $dtv) {
+  public static $loggedIn = false;
+  public function render(LoginView $v, DateTimeView $dtv) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -12,7 +14,7 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderIsLoggedIn($isLoggedIn) . '
+          ' . $this->renderIsLoggedIn(self::$loggedIn) . '
           
           <div class="container">
               ' . $v->response() . '
@@ -23,9 +25,14 @@ class LayoutView {
       </html>
     ';
   }
-  
-  private function renderIsLoggedIn($isLoggedIn) {
-    if ($isLoggedIn) {
+
+  public function checkIfUserIsLoggedIn(){
+    if(isset($_SESSION["isLoggedIn"])){
+      self::$loggedIn = $_SESSION["isLoggedIn"];
+    }
+  }
+  private function renderIsLoggedIn($loggedIn) {
+    if ($loggedIn == true) {
       return '<h2>Logged in</h2>';
     }
     else {
