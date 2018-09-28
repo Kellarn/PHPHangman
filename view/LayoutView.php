@@ -48,7 +48,7 @@ class LayoutView {
 
   private function checkWhichResponseToShow($v, $rv){
     if(isset($_GET["register"])){
-      return $rv->generateRegisterHTML();
+      return $rv->response();
     } else {
        return $v->response();
     }

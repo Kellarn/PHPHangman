@@ -35,7 +35,7 @@ class LoginView {
 		// $LoginModel = new LoginModel();
 		// echo $this->loginModel->sendMessage();
 		$message = '';
-		if($_SERVER["REQUEST_METHOD"] == "POST"){
+		if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST[self::$login])){
 			if(isset($_POST[self::$logout])){
 				session_destroy();
 				$_SESSION = [];
@@ -61,11 +61,6 @@ class LoginView {
 			    }
 			}
 		} else {
-			$pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
-		if($pageWasRefreshed){
-			echo "Hello";
-			$response = $this->generateLoginFormHTML($message);
-		}
 			$response = $this->generateLoginFormHTML($message);
 		}
 		return $response;
@@ -92,7 +87,7 @@ class LoginView {
 	*/
 	private function generateLoginFormHTML($message) {
 		return '
-			<form method="post" > 
+			<form method="post"> 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
 					<p id="' . self::$messageId . '">' . $message . '</p>
