@@ -18,11 +18,6 @@ class LoginController {
         $this->registerView = $registerView;
     }
     public function renderPage(){
-        /* $login = new \model\Login();
-//CREATE OBJECTS OF THE VIEWS
-$v = new LoginView($login);
-$dtv = new DateTimeView();
-$lv = new LayoutView();*/
     $pageToEcho = $this->layoutView->render($this->loginView, $this->dateTimeView, $this->registerView);
     echo $pageToEcho;
     }
