@@ -54,6 +54,7 @@ class GetHangmanWords {
 
     public function setCurrentGameWord()
     {
+        $this->sql();
         $amountOfWords = count($this->words);
         $randomNumber = rand(0, $amountOfWords -1);
         var_dump($amountOfWords);

@@ -14,7 +14,7 @@ class MainController {
     }
     public function renderMainPage(){
     $this->hangmanController->renderHangmanPage();
-    $this->loginController->renderPage();
+    // $this->loginController->renderPage();
     }
 
 }

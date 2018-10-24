@@ -11,7 +11,7 @@ class HangmanController {
         
     }
     public function renderHangmanPage(){
-    $pageToEcho = $this->hangmanView->show();
+    $pageToEcho = $this->hangmanView->checkTheGame();
     echo $pageToEcho;
     }
 
