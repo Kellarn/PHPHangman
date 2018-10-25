@@ -18,31 +18,31 @@ class HangmanView {
         $this->hangmanStates = $hangmanStates;
         $this->hangmanWords = $hangmanWords;
     }
-	public function show($hangmanStateNumber, $guessedLetter) {
+	public function show($guessedLetter, $wordAsUnderscore, $wrong, $theWordAsIndexNumber) {
         // $this->hangmanWords->sendMessage();
         // $this->checkGuess();
-        $guessForm = $this->guessForm($guessedLetter);
+        $guessForm = $this->guessForm($guessedLetter, $wrong, $theWordAsIndexNumber);
         return
         '<h1> Lets play Hangman!</h1>
          <pre>' 
-         . $this->hangmanStates->hang[$hangmanStateNumber] . 
+         . $this->hangmanStates->hang[$wrong] . 
          '</pre>
          <br>
-         <p id="'. $this->wordToGuess .'"><strong>Word to guess:'
-         . $this->wordToGuess .
+         <p><strong>Word to guess:'
+         . $wordAsUnderscore .
          '</strong></p>
          <p>Letters you have guessed already:' 
          . $this->guessedLetters
          .$guessForm;
     }
     
-    public function guessForm($guessedLetter)
+    public function guessForm($guessedLetter, $wrong, $theWordAsIndexNumber)
     {
         return '
         <form method="post" action="">
-           <input type="hidden" name="wrong" value="'. $this->wrong .'"/>
+           <input type="hidden" name="wrong" value="'. $wrong .'"/>
            <input type="hidden" name="lettersGuessed" value="'. $guessedLetter .'" />
-           <input type="hidden" name="word" value="' .$this->which . '"/>
+           <input type="hidden" name="word" value="' .$theWordAsIndexNumber . '"/>
            <fieldset>
              <legend>Guess a word</legend>
              <input type="text" name="letter" autofocus />
@@ -54,49 +54,39 @@ class HangmanView {
     public function checkGuess()
     {
         if($_SERVER["REQUEST_METHOD"] == "POST"){
-            $this->which = $this->fetchCurrentWord();
-            var_dump($this->which);
 
             $currentGuess = $_POST["letter"];
             $letter = strtoupper($currentGuess[0]);
+            $amountOfWrongGuesses = $_POST["wrong"];
 
-            if(!strstr($this->wordToGuess, $letter))
-            {
-                if(isset($_SESSION["amountOfGuesses"])){
-                    $_SESSION["amountOfGuesses"] += 1;
-                } else {
-                    $_SESSION["amountOfGuesses"] = 1;
-                }
-            }
-            var_dump($_SESSION["amountOfGuesses"]);
-
-            /* if(isset($_SESSION["guessedLetters"])) {
-                $_SESSION["guessedLetters"] = $_SESSION["guessedLetters"] . $letter;
-            } else {
-                $_SESSION["guessedLetters"] = $letter;
-            } */
             $this->guessedLetters = $_POST["lettersGuessed"];
             $this->guessedLetters = $this->guessedLetters . $letter;
-            var_dump($this->guessedLetters);
 
-            $this->wordToGuess = $this->checkGuessedLetter($letter);
-            var_dump($this->wordToGuess);
+            $words = $this->hangmanWords->sql();
 
-            return $this->show(0, $this->guessedLetters);
+            $theWordAsIndexNumber = $_POST["word"];
+            $theWord = $words[$theWordAsIndexNumber];
+            $theWord = strtoupper($theWord);
+            $wordAsUnderscore = $this->checkGuessedLetter($this->guessedLetters, $theWord);
 
+            if(!strstr($theWord, $letter))
+            {
+               $amountOfWrongGuesses++;
+            }
+
+            return $this->show($this->guessedLetters, $wordAsUnderscore, $amountOfWrongGuesses, $theWordAsIndexNumber );
         }
     }
 
-    public function checkGuessedLetter($guessedLetter)
+    public function checkGuessedLetter($guessedLetters, $theWord)
     {
-        $len = strlen($this->wordToGuess);
+        $lengthOfTheWord = strlen($theWord);
+        $currentGuess = str_repeat("_ ", $lengthOfTheWord );
 
-        $currentGuess = str_repeat("_ ", $len);
-
-        for($i = 0; $i < $len; $i++)
+        for($i = 0; $i < $lengthOfTheWord ; $i++)
         {
-            $ch = $this->wordToGuess[$i];
-            if(strstr($guessedLetter, $ch))
+            $ch = $theWord[$i];
+            if(strstr($guessedLetters, $ch))
             {
                 $pos = 2 * $i;
                 $currentGuess[$pos] = $ch;
@@ -119,16 +109,17 @@ class HangmanView {
     public function startGame()
     {
         $this->guessedLetters = '';
-        // $this->wordsArray = $this->hangmanWords->sql();
         $words = $this->hangmanWords->sql();
+       
         $amountOfWords = count($words);
         $randomNumber = rand(0, $amountOfWords -1);
         $randomWord = $words[$randomNumber];
         $len = strlen($randomWord);
         $theWordtoGuess = str_repeat('_ ', $len);
+        
         $this->wordToGuess = $theWordtoGuess;
-        // var_dump($this->wordToGuess);
-        $response = $this->show(0, "", $randomNumber);
+        
+        $response = $this->show("", $theWordtoGuess, 0, $randomNumber);
         return $response;
     }
 
@@ -143,7 +134,7 @@ class HangmanView {
     public function fetchGuessedLetters()
     {
         if($_SERVER["REQUEST_METHOD"] == "POST"){
-            return $_GET[$this->guessedLetters];
+            return $_POST[$this->wordToGuess];
         } else {
             return "Hello";
         }

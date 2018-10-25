@@ -27,10 +27,6 @@ class GetHangmanWords {
             return "Connection successfull";
         }
     }
-
-    public function sendMessage(){
-        return $this->connectToSql();
-    }
     public function sql() {
  
             // Prepare a select statement
@@ -57,7 +53,6 @@ class GetHangmanWords {
         $this->sql();
         $amountOfWords = count($this->words);
         $randomNumber = rand(0, $amountOfWords -1);
-        var_dump($amountOfWords);
         $randomWord = $this->words[$randomNumber];
         $len = strlen($randomWord);
         $theWordtoGuess = str_repeat('_ ', $len);
