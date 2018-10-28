@@ -18,13 +18,11 @@ class HangmanView {
         $this->hangmanStates = $hangmanStates;
         $this->hangmanWords = $hangmanWords;
     }
-	public function show($guessedLetter, $wordAsUnderscore, $wrong, $theWordAsIndexNumber) {
-        // $this->hangmanWords->sendMessage();
-        // $this->checkGuess();
+	private function show($guessedLetter, $wordAsUnderscore, $wrong, $theWordAsIndexNumber) {
+
         $guessForm = $this->guessForm($guessedLetter, $wrong, $theWordAsIndexNumber);
         return
-        '<h1> Lets play Hangman!</h1>
-         <pre>' 
+        '<pre>' 
          . $this->hangmanStates->hang[$wrong] . 
          '</pre>
          <br>
@@ -36,7 +34,7 @@ class HangmanView {
          .$guessForm;
     }
     
-    public function guessForm($guessedLetter, $wrong, $theWordAsIndexNumber)
+    private function guessForm($guessedLetter, $wrong, $theWordAsIndexNumber)
     {
         return '
         <form method="post" action="">
@@ -51,10 +49,10 @@ class HangmanView {
         </form>';
     }
 
-    public function checkGuess()
+    private function checkGuess()
     {
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
-
+        if($_SERVER["REQUEST_METHOD"] == "POST")
+        {
             $currentGuess = $_POST["letter"];
             $letter = strtoupper($currentGuess[0]);
             $amountOfWrongGuesses = $_POST["wrong"];
@@ -74,11 +72,22 @@ class HangmanView {
                $amountOfWrongGuesses++;
             }
 
-            return $this->show($this->guessedLetters, $wordAsUnderscore, $amountOfWrongGuesses, $theWordAsIndexNumber );
+            if(!strstr($wordAsUnderscore, "_"))
+            {
+                return $this->playerHasWon($theWord, $amountOfWrongGuesses);
+            } 
+            else if($amountOfWrongGuesses == 6)
+            {
+                return $this->playerHasLost($theWord, $letter);
+            }
+            else
+            {
+                return $this->show($this->guessedLetters, $wordAsUnderscore, $amountOfWrongGuesses, $theWordAsIndexNumber );
+            }
         }
     }
 
-    public function checkGuessedLetter($guessedLetters, $theWord)
+    private function checkGuessedLetter($guessedLetters, $theWord)
     {
         $lengthOfTheWord = strlen($theWord);
         $currentGuess = str_repeat("_ ", $lengthOfTheWord );
@@ -98,7 +107,8 @@ class HangmanView {
 
     public function checkTheGame()
     {
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
+        if($_SERVER["REQUEST_METHOD"] == "POST")
+        {
             return $this->checkGuess();
         } else {
             $response = $this->startGame();
@@ -106,7 +116,7 @@ class HangmanView {
         }
     }
 
-    public function startGame()
+    private function startGame()
     {
         $this->guessedLetters = '';
         $words = $this->hangmanWords->sql();
@@ -123,7 +133,7 @@ class HangmanView {
         return $response;
     }
 
-    public function fetchCurrentWord()
+    private function fetchCurrentWord()
     {
         if($_SERVER["REQUEST_METHOD"] == "POST"){
             return $_POST["word"];
@@ -131,12 +141,30 @@ class HangmanView {
             return "Hello";
         }
     }
-    public function fetchGuessedLetters()
+    private function fetchGuessedLetters()
     {
         if($_SERVER["REQUEST_METHOD"] == "POST"){
             return $_POST[$this->wordToGuess];
         } else {
             return "Hello";
         }
+    }
+
+    private function playerHasWon($word, $amountOfWrongGuesses)
+    {
+        return
+        '
+        <h2>You win!</h2>
+        <p>You guessed the correct word <strong>' .$word. '</strong> with '.$amountOfWrongGuesses.' wrong guesses. Well done!!</p>
+        ';
+    }
+
+    private function playerHasLost($word, $letter)
+    {
+        return
+        '
+        <h2>You lost! :(</h2>
+        <p>You were hung by the letter: '.$letter.'. The correct word was: '.$word.'. Better luck next time!</p>
+        ';
     }
 }

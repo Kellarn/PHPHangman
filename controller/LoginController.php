@@ -19,7 +19,7 @@ class LoginController {
     }
     public function renderPage(){
     $pageToEcho = $this->layoutView->render($this->loginView, $this->dateTimeView, $this->registerView);
-    echo $pageToEcho;
+    return $pageToEcho;
     }
 
 }

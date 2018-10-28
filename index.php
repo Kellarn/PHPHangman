@@ -14,27 +14,34 @@ require_once('model/Register.php');
 require_once('view/HangmanView.php');
 require_once('model/HangmanStates.php');
 require_once('model/GetHangmanWords.php');
-
-//var_dump($_SESSION["isLoggedIn"]);
+require_once('view/MainLayoutView.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
+//Creat objects of the models
 $login = new \model\Login();
 $register = new \model\Register();
+$hs = new \model\HangmanStates();
+$hw = new \model\GetHangmanWords();
+
 //CREATE OBJECTS OF THE VIEWS
 $v = new \view\LoginView($login);
 $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
 $rv = new \view\RegisterView($register);
-$hs = new \model\HangmanStates();
-$hw = new \model\GetHangmanWords();
 $hv = new \view\HangmanView($hs, $hw);
 
+
+//Create objects of the controllers
 $loginController = new \controller\LoginController($v, $lv, $dtv, $rv);
 $hangmanController = new \controller\HangmanController($hv);
-$mainController = new \controller\MainController($loginController, $hangmanController);
+
+$mlv = new \view\MainLayoutView($hangmanController, $loginController);
+$mainController = new \controller\MainController($mlv, $dtv, $lv, $hv, $rv, $v);
+
+//Render main page using the main controller
 $mainController->renderMainPage();
 
 

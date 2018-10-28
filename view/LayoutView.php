@@ -7,20 +7,10 @@ class LayoutView {
   public static $loggedIn = false;
   public function render(LoginView $v, DateTimeView $dtv, RegisterView $rv) {
     $checkResponse =  $this->checkWhichResponseToShow($v, $rv);
-    // echo $renderisLoggedIn;
     $show = $dtv->show();
     $renderisLoggedIn = $this->renderIsLoggedIn();
     $registerTag = $rv->showRegisterTag();
-    return '<!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Workshop 3</title>
-        </head>
-        <body>
-          <h1>Hangman!</h1>
-          <div class="game">
-          </div>
+    return'
           ' .$registerTag . '
           ' . $renderisLoggedIn . '
           
@@ -29,16 +19,9 @@ class LayoutView {
               
               ' . $show . '
           </div>
-         </body>
-      </html>
     ';
   }
 
-  /*public function checkIfUserIsLoggedIn(){
-    if(isset($_SESSION["isLoggedIn"])){
-      self::$loggedIn = $_SESSION["isLoggedIn"];
-    }
-  }*/
   private function renderIsLoggedIn() {
     if (isset($_SESSION["isLoggedIn"])) {
       return '<h2>Logged in</h2>';
