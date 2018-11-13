@@ -19,7 +19,7 @@ class RegisterView {
 
     public function showRegisterTag(){
         if(isset($_GET["register"])){
-            return "<a href='?index'>Back to login</a>";
+            return "<a href='?login'>Back to login</a>";
           } else if(isset($_SESSION["isLoggedIn"])) {
             return "";
           } else {

@@ -4,12 +4,12 @@ namespace view;
 
 class LayoutView {
   
-  public static $loggedIn = false;
+  // public static $loggedIn = false;
   public function render(LoginView $v, DateTimeView $dtv, RegisterView $rv) {
+    $registerTag = $rv->showRegisterTag();
     $checkResponse =  $this->checkWhichResponseToShow($v, $rv);
     $show = $dtv->show();
     $renderisLoggedIn = $this->renderIsLoggedIn();
-    $registerTag = $rv->showRegisterTag();
     return'
           ' .$registerTag . '
           ' . $renderisLoggedIn . '

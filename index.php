@@ -39,7 +39,7 @@ $loginController = new \controller\LoginController($v, $lv, $dtv, $rv);
 $hangmanController = new \controller\HangmanController($hv);
 
 $mlv = new \view\MainLayoutView($hangmanController, $loginController);
-$mainController = new \controller\MainController($mlv, $dtv, $lv, $hv, $rv, $v);
+$mainController = new \controller\MainController($mlv);
 
 //Render main page using the main controller
 $mainController->renderMainPage();

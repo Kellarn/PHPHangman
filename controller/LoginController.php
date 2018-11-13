@@ -22,4 +22,9 @@ class LoginController {
     return $pageToEcho;
     }
 
+    public function renderGoToLogin() {
+        $pageToEcho = $this->loginView->renderGoToLogin();
+        return $pageToEcho;
+    }
+
 }

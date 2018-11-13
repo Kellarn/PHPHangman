@@ -6,17 +6,20 @@ class MainLayoutView {
 
     private $hangmanController;
     private $loginController;
+    private $loginLayoutView;
+    private $hangmanView;
 
     public function __construct(\controller\HangmanController $hangmanController, \controller\LoginController $loginController)
     {
         $this->hangmanController = $hangmanController;
         $this->loginController = $loginController;
+        $_SESSION = [];
     }
   
   public function render() {
-    $loginLayoutView = $this->loginController->renderPage();
     // $dateTimeView = $dtv->show();
-    $hangmanView = $this->hangmanController->renderHangmanPage();
+    $this->checkWhatLoginToShow();
+    // $hangmanView = $this->hangmanController->renderHangmanPage();
     return '<!DOCTYPE html>
       <html>
         <head>
@@ -26,11 +29,24 @@ class MainLayoutView {
         <body>
           <h1>Lets play Hangman!</h1>
           <div class="game">
-          '.$hangmanView.'
+          '.$this->hangmanView.'
           </div>
-          '.$loginLayoutView.'
+          '.$this->loginLayoutView.'
          </body>
       </html>
     ';
+  }
+
+  private function checkWhatLoginToShow() {
+    if(isset($_POST["goToLogin"])) {
+      $this->loginLayoutView = $this->loginController->renderPage();
+      $this->hangmanView = "";
+    } else if(isset($_GET["register"])) {
+      $this->loginLayoutView = $this->loginController->renderPage();
+      $this->hangmanView = "";
+    } else {
+      $this->hangmanView = $this->hangmanController->renderHangmanPage();
+      $this->loginLayoutView = $this->loginController->renderGoToLogin();
+    }
   }
 }

@@ -87,7 +87,7 @@ class LoginView {
 	*/
 	private function generateLoginFormHTML($message) {
 		return '
-			<form method="post"> 
+			<form method="post" action="login"> 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
 					<p id="' . self::$messageId . '">' . $message . '</p>
@@ -127,4 +127,11 @@ class LoginView {
 		}
 	}
 	
+	public function renderGoToLogin() {
+		return '
+			<form method="post" action="?login">
+				<input type="submit" name="goToLogin" value="Login"/>
+			</form>
+		';
+	}
 }
