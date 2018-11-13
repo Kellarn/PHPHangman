@@ -44,7 +44,7 @@ class HangmanView {
            <fieldset>
              <legend>Guess a word</legend>
              <input type="text" name="letter" autofocus />
-             <input type="submit" value="Guess" /> 
+             <input type="submit" name="Guess" value="Guess" /> 
             </fieldset>
         </form>';
     }
@@ -107,7 +107,7 @@ class HangmanView {
 
     public function checkTheGame()
     {
-        if($_SERVER["REQUEST_METHOD"] == "POST")
+        if(isset($_POST["Guess"]))
         {
             return $this->checkGuess();
         } else {

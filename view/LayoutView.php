@@ -19,6 +19,9 @@ class LayoutView {
               
               ' . $show . '
           </div>
+          <form method="post" action="?">
+				    <input type="submit" name="goToHangman" value="Back"/>
+			    </form>
     ';
   }
 
