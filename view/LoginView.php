@@ -62,7 +62,11 @@ class LoginView {
 			}
 		} else {
 			if(isset($_GET["login"])) {
-				$response = $this->generateLoginFormHTML($message);
+				if(isset($_SESSION["isLoggedIn"])){
+					$response = $this->generateLogoutButtonHTML($message);
+				   } else {
+					$response = $this->generateLoginFormHTML($message);
+				   }
 			} else {
 				$response = $this->renderGoToLogin();
 			}
@@ -132,7 +136,16 @@ class LoginView {
 	}
 	
 	public function renderGoToLogin() {
-		return '
+		if(isset($_SESSION["isLoggedIn"])) {
+			return 
+			'
+			<form method="post" action="?login">
+				<input type="submit" name="goToLogin" value="MyPage"/>
+			</form>
+			';
+		}
+		return 
+		'
 			<form method="post" action="?login">
 				<input type="submit" name="goToLogin" value="Login"/>
 			</form>

@@ -20,6 +20,7 @@ class LayoutView {
     $this->DateTimeView = $dtv;
     $this->RegisterView = $rv;
   }
+  
   public function render() {
     $this->checkWhatToRender();
     return'
