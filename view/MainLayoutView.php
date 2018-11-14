@@ -46,7 +46,7 @@ class MainLayoutView {
         $this->hangmanView = "";
     } else {
         $this->hangmanView = $this->hangmanController->renderHangmanPage();
-        $this->loginLayoutView = $this->loginController->renderGoToLogin();
+        $this->loginLayoutView = $this->loginController->renderPage();
     }
   }
 }

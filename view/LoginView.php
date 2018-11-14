@@ -35,7 +35,7 @@ class LoginView {
 		// $LoginModel = new LoginModel();
 		// echo $this->loginModel->sendMessage();
 		$message = '';
-		if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST[self::$login])){
+		if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST[self::$login]) || isset($_POST[self::$logout]) ){
 			if(isset($_POST[self::$logout])){
 				session_destroy();
 				$_SESSION = [];
@@ -61,7 +61,11 @@ class LoginView {
 			    }
 			}
 		} else {
-			$response = $this->generateLoginFormHTML($message);
+			if(isset($_GET["login"])) {
+				$response = $this->generateLoginFormHTML($message);
+			} else {
+				$response = $this->renderGoToLogin();
+			}
 		}
 		return $response;
 	}

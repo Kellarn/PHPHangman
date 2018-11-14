@@ -29,8 +29,8 @@ $hw = new \model\GetHangmanWords();
 //CREATE OBJECTS OF THE VIEWS
 $v = new \view\LoginView($login);
 $dtv = new \view\DateTimeView();
-$lv = new \view\LayoutView();
 $rv = new \view\RegisterView($register);
+$lv = new \view\LayoutView($v, $dtv, $rv);
 $hv = new \view\HangmanView($hs, $hw);
 
 

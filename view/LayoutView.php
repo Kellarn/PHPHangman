@@ -4,20 +4,31 @@ namespace view;
 
 class LayoutView {
   
-  // public static $loggedIn = false;
-  public function render(LoginView $v, DateTimeView $dtv, RegisterView $rv) {
-    $registerTag = $rv->showRegisterTag();
-    $checkResponse =  $this->checkWhichResponseToShow($v, $rv);
-    $show = $dtv->show();
-    $renderisLoggedIn = $this->renderIsLoggedIn();
+
+  private $LoginView;
+  private $DateTimeView;
+  private $RegisterView;
+
+  private $registerTag;
+  private $registerOrLogin;
+  private $dateTime;
+  private $loggedInOrNotTag;
+
+  public function __construct(\view\LoginView $v, \view\DateTimeView $dtv, \view\RegisterView $rv) {
+    $this->LoginView = $v;
+    $this->DateTimeView = $dtv;
+    $this->RegisterView = $rv;
+  }
+  public function render() {
+    $this->checkWhatToRender();
     return'
-          ' .$registerTag . '
-          ' . $renderisLoggedIn . '
+          ' .$this->registerTag . '
+          ' . $this->loggedInOrNotTag . '
           
           <div class="container">
-              ' . $checkResponse . '
+              ' . $this->registerOrLogin . '
               
-              ' . $show . '
+              ' . $this->dateTime . '
           </div>
           <form method="post" action="?">
 				    <input type="submit" name="goToHangman" value="Back"/>
@@ -34,11 +45,18 @@ class LayoutView {
     }
   }
 
-  private function checkWhichResponseToShow($v, $rv){
+  private function checkWhichResponseToShow(){
     if(isset($_GET["register"])){
-      return $rv->response();
+      return $this->RegisterView->response();
     } else {
-       return $v->response();
+       return $this->LoginView->response();
     }
+  }
+
+  private function checkWhatToRender() {
+    $this->registerTag = $this->RegisterView->showRegisterTag();
+    $this->registerOrLogin =  $this->checkWhichResponseToShow();
+    $this->dateTime = $this->DateTimeView->show();
+    $this->loggedInOrNotTag = $this->renderIsLoggedIn();
   }
 }
