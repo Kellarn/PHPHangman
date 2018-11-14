@@ -13,6 +13,7 @@ class LayoutView {
   private $registerOrLogin;
   private $dateTime;
   private $loggedInOrNotTag;
+  private $backButton;
 
   public function __construct(\view\LoginView $v, \view\DateTimeView $dtv, \view\RegisterView $rv) {
     $this->LoginView = $v;
@@ -30,9 +31,7 @@ class LayoutView {
               
               ' . $this->dateTime . '
           </div>
-          <form method="post" action="?">
-				    <input type="submit" name="goToHangman" value="Back"/>
-			    </form>
+          ' . $this->backButton . '
     ';
   }
 
@@ -54,9 +53,23 @@ class LayoutView {
   }
 
   private function checkWhatToRender() {
-    $this->registerTag = $this->RegisterView->showRegisterTag();
     $this->registerOrLogin =  $this->checkWhichResponseToShow();
     $this->dateTime = $this->DateTimeView->show();
     $this->loggedInOrNotTag = $this->renderIsLoggedIn();
+    
+    if(isset($_GET["login"])) {
+      $this->registerTag = $this->RegisterView->showRegisterTag();
+      $this->backButton = $this->renderBackButton();
+    } else {
+      $this->registerTag = "";
+      $this->backButton = "";
+    }
+  }
+
+  private function renderBackButton() {
+    return '
+    <form method="post" action="?">
+			<input type="submit" name="goToHangman" value="Back"/>
+		</form>';
   }
 }

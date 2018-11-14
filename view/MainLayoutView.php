@@ -13,7 +13,7 @@ class MainLayoutView {
     {
         $this->hangmanController = $hangmanController;
         $this->loginController = $loginController;
-        $_SESSION = [];
+        // $_SESSION = [];
     }
   
   public function render() {
