@@ -11,7 +11,6 @@ class AddHangmanWords {
 
     public function __construct(){
         self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
-        $this->connectToSql();
     }
  
     private function connectToSql() {
@@ -24,6 +23,7 @@ class AddHangmanWords {
         }
     }
     public function addWord($word) {
+        $this->connectToSql();
         $query = "INSERT INTO words (word) VALUES (?)";
         $stmt = mysqli_prepare(self::$link, $query);
         mysqli_stmt_bind_param($stmt, "s", $param_word);
