@@ -15,6 +15,9 @@ require_once('view/HangmanView.php');
 require_once('model/HangmanStates.php');
 require_once('model/GetHangmanWords.php');
 require_once('view/MainLayoutView.php');
+require_once('view/LoggedInView.php');
+require_once('model/AddHangmanWords.php');
+require_once('model/Highscore.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
@@ -25,12 +28,15 @@ $login = new \model\Login();
 $register = new \model\Register();
 $hs = new \model\HangmanStates();
 $hw = new \model\GetHangmanWords();
+$ahw = new \model\AddHangmanWords();
+$high = new \model\Highscore();
 
 //CREATE OBJECTS OF THE VIEWS
 $v = new \view\LoginView($login);
 $dtv = new \view\DateTimeView();
 $rv = new \view\RegisterView($register);
-$lv = new \view\LayoutView($v, $dtv, $rv);
+$liv = new \view\LoggedInView($ahw, $high);
+$lv = new \view\LayoutView($v, $dtv, $rv, $liv);
 $hv = new \view\HangmanView($hs, $hw);
 
 

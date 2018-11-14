@@ -11,6 +11,20 @@ class LoggedInView {
         $this->highScore = $hs;
     }
 
+    public function renderLoggedInView() {
+        return '
+        '. $this->addWordForm() .'
+        ';
+    }
 
-
+    private function addWordForm() {
+        return '
+        <form method="post" action="">
+           <fieldset>
+             <legend>Type in a word to add to collection</legend>
+             <input type="text" name="word" autofocus />
+             <input type="submit" name="add" value="Add" /> 
+            </fieldset>
+        </form>';
+    }
 }

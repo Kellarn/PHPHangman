@@ -8,17 +8,20 @@ class LayoutView {
   private $LoginView;
   private $DateTimeView;
   private $RegisterView;
+  private $LoggedInView;
 
   private $registerTag;
   private $registerOrLogin;
   private $dateTime;
   private $loggedInOrNotTag;
   private $backButton;
+  private $addWord;
 
-  public function __construct(\view\LoginView $v, \view\DateTimeView $dtv, \view\RegisterView $rv) {
+  public function __construct(\view\LoginView $v, \view\DateTimeView $dtv, \view\RegisterView $rv, \view\LoggedInView $liv) {
     $this->LoginView = $v;
     $this->DateTimeView = $dtv;
     $this->RegisterView = $rv;
+    $this->LoggedInView = $liv;
   }
   
   public function render() {
@@ -26,7 +29,7 @@ class LayoutView {
     return'
           ' .$this->registerTag . '
           ' . $this->loggedInOrNotTag . '
-          
+          ' . $this->addWord . '
           <div class="container">
               ' . $this->registerOrLogin . '
               
@@ -61,6 +64,7 @@ class LayoutView {
     if(isset($_GET["login"])) {
       $this->registerTag = $this->RegisterView->showRegisterTag();
       $this->backButton = $this->renderBackButton();
+      $this->addWord = $this->LoggedInView->renderLoggedInView();
     } else {
       $this->registerTag = "";
       $this->backButton = "";

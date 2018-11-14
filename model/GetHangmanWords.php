@@ -1,6 +1,6 @@
 <?php
 
-namespace Model;
+namespace model;
 // Include config file
 require_once("environment.php");
 

@@ -18,9 +18,9 @@ class HangmanView {
         $this->hangmanStates = $hangmanStates;
         $this->hangmanWords = $hangmanWords;
     }
-	private function show($guessedLetter, $wordAsUnderscore, $wrong, $theWordAsIndexNumber) {
+	private function show($guessedLetter, $wordAsUnderscore, $wrong, $currentWordAsIndex) {
 
-        $guessForm = $this->guessForm($guessedLetter, $wrong, $theWordAsIndexNumber);
+        $guessForm = $this->guessForm($guessedLetter, $wrong, $currentWordAsIndex);
         return
         '<pre>' 
          . $this->hangmanStates->hang[$wrong] . 
@@ -34,13 +34,13 @@ class HangmanView {
          .$guessForm;
     }
     
-    private function guessForm($guessedLetter, $wrong, $theWordAsIndexNumber)
+    private function guessForm($guessedLetter, $wrong, $currentWordAsIndex)
     {
         return '
         <form method="post" action="">
            <input type="hidden" name="wrong" value="'. $wrong .'"/>
            <input type="hidden" name="lettersGuessed" value="'. $guessedLetter .'" />
-           <input type="hidden" name="word" value="' .$theWordAsIndexNumber . '"/>
+           <input type="hidden" name="word" value="' .$currentWordAsIndex . '"/>
            <fieldset>
              <legend>Guess a word</legend>
              <input type="text" name="letter" autofocus />
@@ -62,39 +62,39 @@ class HangmanView {
 
             $words = $this->hangmanWords->sql();
 
-            $theWordAsIndexNumber = $_POST["word"];
-            $theWord = $words[$theWordAsIndexNumber];
-            $theWord = strtoupper($theWord);
-            $wordAsUnderscore = $this->checkGuessedLetter($this->guessedLetters, $theWord);
+            $currentWordAsIndex = $_POST["word"];
+            $currentWordInGame = $words[$currentWordAsIndex];
+            $currentWordInGame = strtoupper($currentWordInGame);
+            $wordAsUnderscore = $this->checkGuessedLetter($this->guessedLetters, $currentWordInGame);
 
-            if(!strstr($theWord, $letter))
+            if(!strstr($currentWordInGame, $letter))
             {
                $amountOfWrongGuesses++;
             }
 
             if(!strstr($wordAsUnderscore, "_"))
             {
-                return $this->playerHasWon($theWord, $amountOfWrongGuesses);
+                return $this->playerHasWon($currentWordInGame, $amountOfWrongGuesses);
             } 
             else if($amountOfWrongGuesses == 6)
             {
-                return $this->playerHasLost($theWord, $letter);
+                return $this->playerHasLost($currentWordInGame, $letter);
             }
             else
             {
-                return $this->show($this->guessedLetters, $wordAsUnderscore, $amountOfWrongGuesses, $theWordAsIndexNumber );
+                return $this->show($this->guessedLetters, $wordAsUnderscore, $amountOfWrongGuesses, $currentWordAsIndex );
             }
         }
     }
 
-    private function checkGuessedLetter($guessedLetters, $theWord)
+    private function checkGuessedLetter($guessedLetters, $currentWordInGame)
     {
-        $lengthOfTheWord = strlen($theWord);
+        $lengthOfTheWord = strlen($currentWordInGame);
         $currentGuess = str_repeat("_ ", $lengthOfTheWord );
 
         for($i = 0; $i < $lengthOfTheWord ; $i++)
         {
-            $ch = $theWord[$i];
+            $ch = $currentWordInGame[$i];
             if(strstr($guessedLetters, $ch))
             {
                 $pos = 2 * $i;
