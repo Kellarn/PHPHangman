@@ -64,7 +64,7 @@ class LayoutView {
     if(isset($_GET["login"])) {
       $this->registerTag = $this->RegisterView->showRegisterTag();
       $this->backButton = $this->renderBackButton();
-      $this->addWord = $this->LoggedInView->response();
+      $this->addWord = $this->LoggedInView->renderLoggedInView();
     } else {
       $this->registerTag = "";
       $this->backButton = "";

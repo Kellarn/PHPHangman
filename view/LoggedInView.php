@@ -6,14 +6,19 @@ class LoggedInView {
 
     private $highScore;
     private $addHangmanWords;
+    private $highscores;
+
     public function __construct(\model\AddHangmanWords $ahw, \model\Highscore $hs) {
         $this->addHangmanWords = $ahw;
         $this->highScore = $hs;
     }
 
-    private function renderLoggedInView() {
+    public function renderLoggedInView() {
+        $response = $this->response();
+        $highscore = $this->renderPlayerHighscores();
         return '
-        '. $this->addWordForm() .'
+        '. $response .'
+        '. $highscore . '
         ';
     }
 
@@ -44,5 +49,31 @@ class LoggedInView {
         if($_SERVER["REQUEST_METHOD"] == "POST"){
 			return $_POST["word"];
 		}
+    }
+
+    private function renderPlayerHighscores() {
+        $highscores = [];
+        if(isset($_SESSION["username"])) {
+            $highscores = $this->highScore->getPlayerHighscore($_SESSION["username"]);
+         }
+        var_dump($highscores);
+        $highscoreTags = '
+        <h3>My highscore</h3>
+            <ol>
+        ';
+        foreach($highscores as $highscore) {
+            $highscoreTags .= '<li> 
+            Solved words: '. $highscore->solvedWords .'
+            <br>Amount of failes: '. $highscore->totalAmountOfTries.'
+            </li>
+            ';
+        }
+        $highscoreTags .= '</ol>';
+        return $highscoreTags;
+    }
+    private function getHighscores() {
+        if(isset($_SESSION["username"])) {
+           $highscores = $this->highScore->getPlayerHighscore($_SESSION["username"]);
+        }
     }
 }

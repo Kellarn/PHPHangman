@@ -31,19 +31,41 @@ class Highscore{
         $param_playerName = $playerName;
         $param_solvedWords = $solvedWords;
         $param_totalAmountOfTries = $totalAmountOfTries;
+
+        mysqli_stmt_close($stmt);
+        mysqli_close(self::$link);
+        
         if(mysqli_stmt_execute($stmt)){
             return "Word added";
         } else {
             return "Word already exists, please try with an other one.";
         }
-        mysqli_stmt_close($stmt);
+    }
+
+    public function getPlayerHighscore($username) {
+        $this->connectToSql();
+        // Prepare a select statement
+        $sql = "SELECT * FROM highscore WHERE playerName = '$username'";
+        $this->highscores = [];
+     
+        $result = mysqli_query(self::$link, $sql);
+        // $row = mysqli_fetch_row($result, MYSQLI_NUM);
+        while($obj = mysqli_fetch_object($result))
+        {
+            array_push($this->highscores, $obj);
+        }
+
+        mysqli_free_result($result);
+        // Close connection
         mysqli_close(self::$link);
+        // echo $this->highscores[0]->playerName;
+        return $this->highscores;
     }
 
     public function getAllHighscores() {
-
+        $this->connectToSql();
             // Prepare a select statement
-            $sql = "SELECT * FROM highscores";
+            $sql = "SELECT * FROM highscore";
             $this->highscores = [];
         
             $result = mysqli_query(self::$link, $sql);
