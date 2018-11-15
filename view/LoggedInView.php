@@ -19,7 +19,7 @@ class LoggedInView {
 
     public function response() {
         $message = "";
-        if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["add"]){
+        if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add"])){
             $word = $this->getRequestWord();
             $message = $this->addHangmanWords->addWord($word);
             $response = $this->addWordForm($message);

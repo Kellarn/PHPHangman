@@ -30,8 +30,6 @@ class AddHangmanWords {
 
         $param_word = $word;
         if(mysqli_stmt_execute($stmt)){
-            //$_SESSION["newUsername"] = $userName;
-            //$_SESSION["message"] = "Registered new user.";
             return "Word added";
         } else {
             return "Word already exists, please try with an other one.";

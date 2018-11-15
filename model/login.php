@@ -62,8 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             session_start();
                             // Store data in session variables
                             $_SESSION["isLoggedIn"] = true;
-                            // $_SESSION["id"] = $id;
-                            // $_SESSION["username"] = $username;
+                            $_SESSION["username"] = $username;
                             return "Welcome";
                             // Redirect user to welcome page
                             // header("location: welcome.php");

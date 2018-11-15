@@ -6,6 +6,8 @@ class HangmanView {
 
     private $hangmanStates;
     private $hangmanWords;
+    private $highscore;
+
     private $wordsArray;
     private $wordToGuess;
     private $wrong;
@@ -13,10 +15,11 @@ class HangmanView {
     private $guessed;
     private $which;
 
-    public function __construct(\model\HangmanStates $hangmanStates, \model\GetHangmanWords $hangmanWords)
+    public function __construct(\model\HangmanStates $hangmanStates, \model\GetHangmanWords $hangmanWords, \model\Highscore $highscore)
     {
         $this->hangmanStates = $hangmanStates;
         $this->hangmanWords = $hangmanWords;
+        $this->highscore = $highscore;
     }
 	private function show($guessedLetter, $wordAsUnderscore, $wrong, $currentWordAsIndex) {
 
@@ -74,6 +77,7 @@ class HangmanView {
 
             if(!strstr($wordAsUnderscore, "_"))
             {
+                $this->highscore->addHighscore($_SESSION["username"], 1, $amountOfWrongGuesses);
                 return $this->playerHasWon($currentWordInGame, $amountOfWrongGuesses);
             } 
             else if($amountOfWrongGuesses == 6)

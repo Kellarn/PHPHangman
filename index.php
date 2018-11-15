@@ -37,7 +37,7 @@ $dtv = new \view\DateTimeView();
 $rv = new \view\RegisterView($register);
 $liv = new \view\LoggedInView($ahw, $high);
 $lv = new \view\LayoutView($v, $dtv, $rv, $liv);
-$hv = new \view\HangmanView($hs, $hw);
+$hv = new \view\HangmanView($hs, $hw, $high);
 
 
 //Create objects of the controllers
