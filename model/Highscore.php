@@ -32,20 +32,20 @@ class Highscore{
         $param_solvedWords = $solvedWords;
         $param_totalAmountOfTries = $totalAmountOfTries;
 
-        mysqli_stmt_close($stmt);
-        mysqli_close(self::$link);
-        
+
         if(mysqli_stmt_execute($stmt)){
             return "Word added";
         } else {
             return "Word already exists, please try with an other one.";
         }
+        mysqli_stmt_close($stmt);
+        mysqli_close(self::$link);
     }
 
     public function getPlayerHighscore($username) {
         $this->connectToSql();
         // Prepare a select statement
-        $sql = "SELECT * FROM highscore WHERE playerName = '$username'";
+        $sql = "SELECT * FROM highscore WHERE playerName = '$username' ORDER BY solvedWords DESC, totalAmountOfTries LIMIT 3";
         $this->highscores = [];
      
         $result = mysqli_query(self::$link, $sql);

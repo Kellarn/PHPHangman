@@ -56,7 +56,6 @@ class LoggedInView {
         if(isset($_SESSION["username"])) {
             $highscores = $this->highScore->getPlayerHighscore($_SESSION["username"]);
          }
-        var_dump($highscores);
         $highscoreTags = '
         <h3>My highscore</h3>
             <ol>
