@@ -10,6 +10,9 @@ class HangmanController {
         $this->hangmanView = $hangmanView;
         
     }
+    public function initHangmanGame() {
+        $this->hangmanView->initGame();
+    }
     public function renderHangmanPage(){
     $pageToEcho = $this->hangmanView->checkTheGame();
     return $pageToEcho;
