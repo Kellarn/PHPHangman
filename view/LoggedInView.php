@@ -24,12 +24,15 @@ class LoggedInView {
 
     public function response() {
         $message = "";
+        $response = "";
         if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add"])){
             $word = $this->getRequestWord();
             $message = $this->addHangmanWords->addWord($word);
             $response = $this->addWordForm($message);
         } else {
-            $response = $this->addWordForm($message);
+            if(isset($_SESSION["isLoggedIn"])) {
+                $response = $this->addWordForm($message);
+            }
         }
         return $response;
     }
@@ -52,23 +55,27 @@ class LoggedInView {
     }
 
     private function renderPlayerHighscores() {
-        $highscores = [];
-        if(isset($_SESSION["username"])) {
-            $highscores = $this->highScore->getPlayerHighscore($_SESSION["username"]);
-         }
-        $highscoreTags = '
-        <h3>My highscore</h3>
-            <ol>
-        ';
-        foreach($highscores as $highscore) {
-            $highscoreTags .= '<li> 
-            Solved words: '. $highscore->solvedWords .'
-            <br>Amount of failes: '. $highscore->totalAmountOfTries.'
-            </li>
+        if(isset($_SESSION["isLoggedIn"])) {
+                $highscores = [];
+            if(isset($_SESSION["username"])) {
+                $highscores = $this->highScore->getPlayerHighscore($_SESSION["username"]);
+            }  
+            $highscoreTags = '
+            <h3>My highscore</h3>
+                <ol>
             ';
+            foreach($highscores as $highscore) {
+                $highscoreTags .= '<li> 
+                Solved words: '. $highscore->solvedWords .'
+                <br>Amount of failes: '. $highscore->totalAmountOfTries.'
+                </li>
+                ';
+            }
+            $highscoreTags .= '</ol>';
+            return $highscoreTags;
+        } else {
+            return "";
         }
-        $highscoreTags .= '</ol>';
-        return $highscoreTags;
     }
     private function getHighscores() {
         if(isset($_SESSION["username"])) {
