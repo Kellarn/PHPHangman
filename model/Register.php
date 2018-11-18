@@ -6,24 +6,17 @@ require_once("environment.php");
 
 class Register{
 
-    private static $link;
+    private $link;
+    private $dbConnection;
 
-    public function __construct(){
-        self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
-    }
-
-    private function connectToSql() {
-
-        // Check connection
-            if(self::$link === false){
-               die("ERROR: Could not connect. " . mysqli_connect_error());
-            } else {
-               return "Connection successfull";
-            }
+    public function __construct(\model\DatabaseConnection $dbc){
+        // self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
+        $this->dbConnection = $dbc;
+        $this->link = $this->dbConnection->connection();
     }
 
     public function addUserToDatabase($userName, $password, $repeatPassword){
-        $this->connectToSql();
+
         if(empty($userName) && empty($password) && empty($repeatPassword)){
             return "Username has too few characters, at least 3 characters.";
         } else if(empty($userName) || empty($password) || empty($repeatPassword)){
@@ -37,8 +30,9 @@ class Register{
         } else if($password != $repeatPassword){
             return "Passwords do not match.";
         } else {
+
             $query = "INSERT INTO users (username, password) VALUES (?,?)";
-            $stmt = mysqli_prepare(self::$link, $query);
+            $stmt = mysqli_prepare($this->link, $query);
             mysqli_stmt_bind_param($stmt, "ss", $param_userName, $param_password);
 
             $param_password = $password;
@@ -52,7 +46,7 @@ class Register{
                 return "User exists, pick another username.";
             }
             mysqli_stmt_close($stmt);
-            mysqli_close(self::$link);
+            mysqli_close($this->link);
         }
     }
 }

@@ -9,43 +9,32 @@ require_once("environment.php");
 // session_start();
 
 class GetHangmanWords {
-    private static $link;
+    private $link;
     private $words;
+    private $config;
 
 
-    public function __construct(){
-        self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
-        $this->connectToSql();
+    public function __construct(\model\DatabaseConnection $$dbc){
+        // self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
+        $this->config = $config;
     }
  
-    private function connectToSql() {
-
-    // Check connection
-        if(self::$link === false){
-            die("ERROR: Could not connect. " . mysqli_connect_error());
-        } else {
-            return "Connection successfull";
-        }
-    }
     public function sql() {
- 
-            // Prepare a select statement
-            $sql = "SELECT * FROM words";
-            $this->words = [];
+        $this->link = $this->config->connection();
+        // Prepare a select statement
+        $sql = "SELECT * FROM words";
+        $this->words = [];
         
-            $result = mysqli_query(self::$link, $sql);
-            // $row = mysqli_fetch_row($result, MYSQLI_NUM);
-            while($row = mysqli_fetch_assoc($result))
-            {
-                // var_dump($row["word"]);
-                array_push($this->words, $row["word"]);
-            }
-            // var_dump($words);
-            return $this->words;
+        $result = mysqli_query($this->link, $sql);
+        while($row = mysqli_fetch_assoc($result))
+        {
+            array_push($this->words, $row["word"]);
+        }
+        return $this->words;
 
             mysqli_free_result($result);
         // Close connection
-        mysqli_close(self::$link);
+        mysqli_close($this->link);
     }
 
     public function setCurrentGameWord()

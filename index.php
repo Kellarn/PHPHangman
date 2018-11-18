@@ -18,18 +18,20 @@ require_once('view/MainLayoutView.php');
 require_once('view/LoggedInView.php');
 require_once('model/AddHangmanWords.php');
 require_once('model/Highscore.php');
+require_once('model/DatabaseConnection.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-//Creat objects of the models
-$login = new \model\Login();
-$register = new \model\Register();
+//Create objects of the models
+$dbc = new \model\DatabaseConnection();
+$login = new \model\Login($dbc);
+$register = new \model\Register($dbc);
 $hs = new \model\HangmanStates();
-$hw = new \model\GetHangmanWords();
-$ahw = new \model\AddHangmanWords();
-$high = new \model\Highscore();
+$hw = new \model\GetHangmanWords($dbc);
+$ahw = new \model\AddHangmanWords($dbc);
+$high = new \model\Highscore($dbc);
 
 //CREATE OBJECTS OF THE VIEWS
 $v = new \view\LoginView($login);

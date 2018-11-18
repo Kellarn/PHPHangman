@@ -1,31 +1,21 @@
 <?php
 
 namespace model;
-// Include config file
-require_once("environment.php");
 
 class AddHangmanWords {
-    private static $link;
+
+    private $link;
     private $words;
+    private $config;
 
-
-    public function __construct(){
-        self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
+    public function __construct(\model\DatabaseConnection $$dbc){
+        $this->config = $config;
     }
  
-    private function connectToSql() {
-
-    // Check connection
-        if(self::$link === false){
-            die("ERROR: Could not connect. " . mysqli_connect_error());
-        } else {
-            return "Connection successfull";
-        }
-    }
     public function addWord($word) {
-        $this->connectToSql();
+        $this->link = $this->config->connection();
         $query = "INSERT INTO words (word) VALUES (?)";
-        $stmt = mysqli_prepare(self::$link, $query);
+        $stmt = mysqli_prepare($this->link, $query);
         mysqli_stmt_bind_param($stmt, "s", $param_word);
 
         $param_word = $word;
@@ -35,6 +25,6 @@ class AddHangmanWords {
             return "Word already exists, please try with an other one.";
         }
         mysqli_stmt_close($stmt);
-        mysqli_close(self::$link);
+        mysqli_close($this->link);
     }
 }

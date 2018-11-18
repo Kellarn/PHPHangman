@@ -1,35 +1,17 @@
 <?php
 
 namespace model;
-// Include config file
-require_once("environment.php");
-
-
-
-// session_start();
 
 class Login {
-    private static $link;
+    private $link;
+    private $dbConnection;
 
-
-    public function __construct(){
-        self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
+    public function __construct(\model\DatabaseConnection $dbc){
+        $this->dbConnection = $dbc;
     }
- 
-private function connectToSql() {
 
-// Check connection
-    if(self::$link === false){
-       die("ERROR: Could not connect. " . mysqli_connect_error());
-    } else {
-       return "Connection successfull";
-    }
-}
-
-public function sendMessage(){
-    return $this->connectToSql();
-}
 public function sql($username, $password) {
+    $this->link = $this->config->connection();
     // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
@@ -38,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Prepare a select statement
         $sql = "SELECT username, password FROM users WHERE username = ?";
         
-        if($stmt = mysqli_prepare(self::$link, $sql)){
+        if($stmt = mysqli_prepare($this->link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "s", $param_username);
             // var_dump($stmt);
@@ -85,7 +67,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
     // Close connection
-    mysqli_close(self::$link);
+    mysqli_close($this->link);
 }
 }
 }
