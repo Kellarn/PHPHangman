@@ -10,12 +10,9 @@ class Login {
         $this->dbConnection = $dbc;
     }
 
-public function sql($username, $password) {
-    $this->link = $this->config->connection();
-    // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
- 
-    // Validate credentials
+public function sql($username, $password){
+    $this->link = $this->dbConnection->connection();
+
     if(!empty($username) && !empty($password)){
         // Prepare a select statement
         $sql = "SELECT username, password FROM users WHERE username = ?";
@@ -61,14 +58,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 return "Oops! Something went wrong. Please try again later.";
             }
         }
-        
-        // Close statement
         mysqli_stmt_close($stmt);
     }
-    
-    // Close connection
     mysqli_close($this->link);
-}
 }
 }
 

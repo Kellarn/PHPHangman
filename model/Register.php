@@ -10,12 +10,12 @@ class Register{
     private $dbConnection;
 
     public function __construct(\model\DatabaseConnection $dbc){
-        // self::$link = mysqli_connect($_ENV["DB_SERVER"], $_ENV["DB_USERNAME"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
         $this->dbConnection = $dbc;
-        $this->link = $this->dbConnection->connection();
     }
 
     public function addUserToDatabase($userName, $password, $repeatPassword){
+
+        $this->link = $this->dbConnection->connection();
 
         if(empty($userName) && empty($password) && empty($repeatPassword)){
             return "Username has too few characters, at least 3 characters.";
@@ -39,12 +39,11 @@ class Register{
             $param_userName = $userName;
             
             if(mysqli_stmt_execute($stmt)){
-                //$_SESSION["newUsername"] = $userName;
-                //$_SESSION["message"] = "Registered new user.";
                 return "Registered new user.";
             } else {
                 return "User exists, pick another username.";
             }
+
             mysqli_stmt_close($stmt);
             mysqli_close($this->link);
         }

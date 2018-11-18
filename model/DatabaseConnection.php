@@ -4,7 +4,7 @@ namespace model;
 
 require_once("environment.php");
 
-class DatebaseConnection {
+class DatabaseConnection {
 
     private static $link;
 

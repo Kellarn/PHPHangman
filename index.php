@@ -43,7 +43,7 @@ $hv = new \view\HangmanView($hs, $hw, $high);
 
 
 //Create objects of the controllers
-$loginController = new \controller\LoginController($v, $lv, $dtv, $rv);
+$loginController = new \controller\LoginController($lv);
 $hangmanController = new \controller\HangmanController($hv);
 
 $mlv = new \view\MainLayoutView($hangmanController, $loginController);

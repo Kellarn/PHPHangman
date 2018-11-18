@@ -6,19 +6,18 @@ class Highscore{
 
     private $link;
     private $highscores;
-    private $config;
+    private $dbConnection;
 
-    public function __construct(\model\DatabaseConnection $$dbc){
-        $this->config = $config;
+    public function __construct(\model\DatabaseConnection $dbc){
+        $this->dbConnection = $dbc;
     }
 
-    public function addHighscore($playerName, $solvedWords, $totalAmountOfTries) {
-        $this->link = $this->config->connection();
+    public function addHighscore($playerName, $solvedWords, $totalAmountOfTries){
+        $this->link = $this->dbConnection->connection();
 
         $query = "INSERT INTO highscore (playerName, solvedWords, totalAmountOfTries) VALUES (?,?,?)";
 
         $stmt = mysqli_prepare(self::$link, $query);
-
         mysqli_stmt_bind_param($stmt, "sss", $param_playerName, $param_solvedWords, $param_totalAmountOfTries);
 
         $param_playerName = $playerName;
@@ -36,14 +35,12 @@ class Highscore{
         mysqli_close($this->link);
     }
 
-    public function getPlayerHighscore($username) {
+    public function getPlayerHighscore($username){
+        $this->highscores = [];
+        $this->link = $this->dbConnection->connection();
 
-        $this->link = $this->config->connection();
         // Prepare a select statement
         $sql = "SELECT * FROM highscore WHERE playerName = '$username' ORDER BY solvedWords DESC, totalAmountOfTries LIMIT 3";
-
-        $this->highscores = [];
-     
         $result = mysqli_query($this->link, $sql);
 
         while($obj = mysqli_fetch_object($result))
