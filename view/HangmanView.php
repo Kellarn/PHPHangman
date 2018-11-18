@@ -102,6 +102,7 @@ class HangmanView {
                         array_splice($this->wordsArray, $this->randomNumber, 1);
                         $_SESSION["wordsArray"] = $this->wordsArray;
                     }
+
                     if(count($_SESSION["wordsArray"]) == 0) {
                         $this->gameHasEndedAddHighscore();
                         return $this->playerHasWonAndNoMoreWords($currentWordInGame, $amountOfWrongGuesses);
@@ -113,7 +114,9 @@ class HangmanView {
             } 
             else if($amountOfWrongGuesses == 6) {
                 $_SESSION["totalAmountOfTries"] += $amountOfWrongGuesses;
+
                 $this->gameHasEndedAddHighscore();
+
                 return $this->playerHasLost($currentWordInGame, $letter);
             }
             else {
