@@ -12,7 +12,7 @@ class Highscore{
         $this->dbConnection = $dbc;
     }
 
-    /**
+      /**
 	 * Connects to DB using DB model and adds a highscore entry based on the player name, 
 	 * amount of solved words and the amount of tries. 
      * 
@@ -22,7 +22,7 @@ class Highscore{
      * @param playerName name of the current logged in player
      * @param solvedWords amount of solved words
      * @param totalAmountOfTries total amount of tries during the whole game
-	 */
+    **/
     public function addHighscore($playerName, $solvedWords, $totalAmountOfTries){
         $this->link = $this->dbConnection->connection();
 
@@ -54,7 +54,7 @@ class Highscore{
 	 *
 	 * @return array containing all higshcore entries for the current logged in player.
      * @param username name of the player to recieve the highscores from
-	 */
+	 **/
     public function getPlayerHighscore($username){
         $this->highscores = [];
         $this->link = $this->dbConnection->connection();

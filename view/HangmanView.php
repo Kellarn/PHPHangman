@@ -89,12 +89,16 @@ class HangmanView {
             }
 
             $currentGuess = $_POST["letter"];
-            $letter = strtoupper($currentGuess[0]);
+            $letter = strtoupper($currentGuess);
+
             $amountOfWrongGuesses = $_POST["wrong"];
+
             $this->guessedLetters = $_POST["lettersGuessed"];
             $this->guessedLetters = $this->guessedLetters . $letter;
+
             $this->randomNumber = $_POST["word"];
             $currentWordAsIndex = $_POST["word"];
+            
             $currentWordInGame =  $this->wordsArray[$currentWordAsIndex];
             $currentWordInGame = strtoupper($currentWordInGame);
             
@@ -133,8 +137,7 @@ class HangmanView {
                     }
                 }
                 return $this->playerHasWon($currentWordInGame, $amountOfWrongGuesses);
-            } 
-            else if($amountOfWrongGuesses == 6) {
+            } else if($amountOfWrongGuesses == 6) {
                 if(isset($_SESSION["totalAmountOfTries"]) && isset($_SESSION["solvedWords"])) {
 
                     $_SESSION["totalAmountOfTries"] += $amountOfWrongGuesses;
@@ -145,8 +148,7 @@ class HangmanView {
                 }
                 $this->gameHasEndedAddHighscore();
                 return $this->playerHasLost($currentWordInGame, $letter);
-            }
-            else {
+            } else {
 
                 unset($_SESSION["playerHasWon"]);
                 return $this->show($this->guessedLetters, $wordAsUnderscore, $amountOfWrongGuesses, $currentWordAsIndex );

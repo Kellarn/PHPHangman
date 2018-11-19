@@ -12,6 +12,7 @@ namespace view;
 	 */
 
 class RegisterView {
+
     private $registerModel;
 
 	private $username = 'RegisterView::UserName';
@@ -116,7 +117,7 @@ class RegisterView {
                     <p id="' . $this->message . '">' . $message . '</p>
 
 					<label for="' . $this->username . '">username :</label>
-					<input type="text" id="' . $this->username . '" name="' . $this->username . '" value="'. $this->usernameValue . '" />
+                    <input type="text" id="' . $this->username . '" name="' . $this->username . '" value="'. $this->usernameValue . '" />
 
 					<label for="' . $this->password . '">Password :</label>
                     <input type="password" id="' . $this->password . '" name="' . $this->password . '" />

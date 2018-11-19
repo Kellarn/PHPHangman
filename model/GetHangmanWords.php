@@ -11,7 +11,7 @@ class GetHangmanWords {
         $this->dbConnection = $dbc;
     }
  
-    /**
+       /**
 	 * Connects to DB using DB model and gets all the words in the DB.
 	 *
 	 * Should be called when a new game is initiated.

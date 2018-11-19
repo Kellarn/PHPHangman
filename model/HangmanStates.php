@@ -66,7 +66,7 @@ class HangmanStates{
     }
     
     
-    /**
+       /**
 	 * Returns the array containing the different hangman states that is created in the __construct.
 	 *
 	 * Is called when a game is initiated.

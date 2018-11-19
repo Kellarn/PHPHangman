@@ -59,7 +59,11 @@ class LayoutView {
 
       $this->registerTag = $this->RegisterView->showRegisterTag();
       $this->backButton = $this->renderBackButton();
-      $this->addWord = $this->LoggedInView->renderLoggedInView();
+      if(isset($_SESSION["isLoggedIn"])) {
+        $this->addWord = $this->LoggedInView->renderLoggedInView();
+      } else {
+        $this->addWord = "";
+      }
     } else {
 
       $this->registerTag = "";

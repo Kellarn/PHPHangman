@@ -2,7 +2,7 @@
 
 namespace view;
 
-/**
+    /**
 	 * Class for displaying the logged in part of the page.
      * It has functions for checking what to show, to show the highscore
      * and to show the add word form. 
