@@ -33,4 +33,8 @@ class Register{
             mysqli_stmt_close($stmt);
             mysqli_close($this->link);
     }
+
+    public function isUserLoggedIn() {
+        return isset($_SESSION["isLoggedIn"]);
+    }
 }

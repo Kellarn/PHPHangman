@@ -5,13 +5,12 @@ namespace view;
 class RegisterView {
     private $registerModel;
 
-	private $username = 'RegisterView::username';
+	private $username = 'RegisterView::UserName';
     private $password = 'RegisterView::Password';
     private $repeatPassword = 'RegisterView::PasswordRepeat';
     private $register = 'RegisterView::Register';
     private $message = 'RegisterView::Message';
 
-    private $getusername = '';
     private $usernameValue = '';
     private $inputIsCorrect = false;
 
@@ -24,6 +23,7 @@ class RegisterView {
 
         if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST[$this->register]) {
 
+            $this->usernameValue = $this->postRequestUserName();
             $message = "";
             $this->checkRegisterInput();
 
@@ -32,7 +32,7 @@ class RegisterView {
                 $message = $this->checkRegisterInput();
             } else {
 
-                $message = $this->registerModel->addUserToDatabase($this->getRequestusername(), $this->getRequestPassword(), $this->getRequestRepeatPassword());
+                $message = $this->registerModel->addUserToDatabase($this->postRequestusername(), $this->postRequestPassword(), $this->postRequestRepeatPassword());
             }
 
             $response = $this->generateRegisterHTML($message);
@@ -45,20 +45,19 @@ class RegisterView {
     }
 
     private function checkRegisterInput() {
-
-        $username = $this->getRequestusername();
-        $password = $this->getRequestPassword();
-        $repeatPassword = $this->getRequestRepeatPassword();
+        $username = $this->postRequestUsername();
+        $password = $this->postRequestPassword();
+        $repeatPassword = $this->postRequestRepeatPassword();
 
         if(empty($username) && empty($password) && empty($repeatPassword)) {
 
-            return "username has too few characters, at least 3 characters.";
+            return "Username has too few characters, at least 3 characters.";
         } else if(empty($username) || empty($password) || empty($repeatPassword)) {
 
             return "Password has too few characters, at least 6 characters.";
         } else if(trim(strlen($username)) < 3) {
 
-            return "username has too few characters, at least 3 characters.";
+            return "Username has too few characters, at least 3 characters.";
         } else if(!(strip_tags($username) == $username)) 
         {
             return "username contains invalid characters.";
@@ -73,14 +72,15 @@ class RegisterView {
         $this->inputIsCorrect = true;
     }
 
-    private function getRequestusername(){
+    private function postRequestUsername(){
+
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 			return $_POST[$this->username];
 		}
     }
     
-    private function getRequestPassword() {
+    private function postRequestPassword() {
 
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -88,7 +88,7 @@ class RegisterView {
 		}
     }
 
-    private function getRequestRepeatPassword() {
+    private function postRequestRepeatPassword() {
 
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -100,6 +100,7 @@ class RegisterView {
 
         return '
             <h2>Register new user</h2>
+            <a href="?login">Back to login</a>
 			<form method="post"> 
 				<fieldset>
                     <legend>Register a new user - Write username and password</legend>
@@ -125,12 +126,12 @@ class RegisterView {
         if(isset($_GET["register"])) {
             
             return "<a href='?login'>Back to login</a>";
-          } else if(isset($_SESSION["isLoggedIn"])) {
+          } else if($this->registerModel->isUserLoggedIn()) {
             
             return "";
           } else {
             
-            return "<a href='?register'>Register a new user</a>";
+            return "<a href='?login?register'>Register a new user</a>";
           }
     }
 }

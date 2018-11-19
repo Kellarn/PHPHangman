@@ -1,13 +1,9 @@
 <?php
-
 namespace view;
-
 class HangmanView {
-
     private $hangmanStates;
     private $hangmanWords;
     private $highscore;
-
     private $wordsArray;
     private $randomNumber;
     private $wordToGuess;
@@ -15,7 +11,6 @@ class HangmanView {
     private $guessedLetters;
     private $guessed;
     private $which;
-
     public function __construct(\model\HangmanStates $hangmanStates, \model\GetHangmanWords $hangmanWords, \model\Highscore $highscore)
     {
         $this->hangmanStates = $hangmanStates;
@@ -24,9 +19,7 @@ class HangmanView {
         $this->wordsArray = [];
         $this->wordsArray = $this->hangmanWords->getWords();
     }
-
 	private function show($guessedLetter, $wordAsUnderscore, $wrong, $currentWordAsIndex) {
-
         $guessForm = $this->guessForm($guessedLetter, $wrong, $currentWordAsIndex);
         return
         '<pre>' 
@@ -55,35 +48,26 @@ class HangmanView {
             </fieldset>
         </form>';
     }
-
     private function checkGuess() {
-
         if($_SERVER["REQUEST_METHOD"] == "POST"){
-
             if(isset($_SESSION["wordsArray"])) {
                 $this->wordsArray = $_SESSION["wordsArray"];
             }
-
             $currentGuess = $_POST["letter"];
-
             $letter = strtoupper($currentGuess[0]);
             $amountOfWrongGuesses = $_POST["wrong"];
-
             $this->guessedLetters = $_POST["lettersGuessed"];
             $this->guessedLetters = $this->guessedLetters . $letter;
-
             $this->randomNumber = $_POST["word"];
             $currentWordAsIndex = $_POST["word"];
             $currentWordInGame =  $this->wordsArray[$currentWordAsIndex];
             $currentWordInGame = strtoupper($currentWordInGame);
             
             $wordAsUnderscore = $this->checkGuessedLetter($this->guessedLetters, $currentWordInGame);
-
             if(!strstr($currentWordInGame, $letter))
             {
                $amountOfWrongGuesses++;
             }
-
             if(!strstr($wordAsUnderscore, "_"))
             {
                 if(isset($_SESSION["isLoggedIn"])){
@@ -95,14 +79,12 @@ class HangmanView {
                         $_SESSION["totalAmountOfTries"] = $amountOfWrongGuesses;
                     }
                     $_SESSION["playerHasWon"] = true;
-
                     if(isset($_SESSION["wordsArray"])) {
                         array_splice($_SESSION["wordsArray"], $this->randomNumber, 1);  
                     } else {
                         array_splice($this->wordsArray, $this->randomNumber, 1);
                         $_SESSION["wordsArray"] = $this->wordsArray;
                     }
-
                     if(count($_SESSION["wordsArray"]) == 0) {
                         $this->gameHasEndedAddHighscore();
                         return $this->playerHasWonAndNoMoreWords($currentWordInGame, $amountOfWrongGuesses);
@@ -114,9 +96,7 @@ class HangmanView {
             } 
             else if($amountOfWrongGuesses == 6) {
                 $_SESSION["totalAmountOfTries"] += $amountOfWrongGuesses;
-
                 $this->gameHasEndedAddHighscore();
-
                 return $this->playerHasLost($currentWordInGame, $letter);
             }
             else {
@@ -125,12 +105,9 @@ class HangmanView {
             }
         }
     }
-
     private function checkGuessedLetter($guessedLetters, $currentWordInGame) {
-
         $lengthOfTheWord = strlen($currentWordInGame);
         $currentGuess = str_repeat("_ ", $lengthOfTheWord );
-
         for($i = 0; $i < $lengthOfTheWord ; $i++)
         {
             $ch = $currentWordInGame[$i];
@@ -140,12 +117,9 @@ class HangmanView {
                 $currentGuess[$pos] = $ch;
             }
         }
-
         return $currentGuess;
     }
-
     public function checkTheGame() {
-
         if(isset($_POST["Guess"])) {
             return $this->checkGuess();
         } else if(isset($_POST["playNext"])) {
@@ -155,17 +129,13 @@ class HangmanView {
             return $response;
         }
     }
-
     private function startGame() {
-
         if(isset($_SESSION["playerHasWon"])) {
             $this->wordsArray = $_SESSION["wordsArray"];
         } else {
             $this->wordsArray = $this->hangmanWords->getWords();
         }
-
         $this->guessedLetters = '';
-
         $amountOfWords = count($this->wordsArray);
         $this->randomNumber = rand(0, $amountOfWords -1);
         $randomWord =  $this->wordsArray[$this->randomNumber];
@@ -176,27 +146,21 @@ class HangmanView {
     
         return $this->show("", $theWordtoGuess, 0, $this->randomNumber);
     }
-
     private function fetchCurrentWord() {
-
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             return $_POST["word"];
         } else {
             return "Hello";
         }
     }
-
     private function fetchGuessedLetters() {
-
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             return $_POST[$this->wordToGuess];
         } else {
             return "Hello";
         }
     }
-
     private function playerHasWon($word, $amountOfWrongGuesses) {
-
         return
         '
         <h2>You win!</h2>
@@ -206,9 +170,7 @@ class HangmanView {
         </form>
         ';
     }
-
     private function playerHasLost($word, $letter) {
-
         return
         '
         <h2>You lost! :(</h2>
@@ -218,9 +180,7 @@ class HangmanView {
         </form>
         ';
     }
-
     private function playerHasWonAndNoMoreWords($word, $amountOfWrongGuesses) {
-
         return
         '
         <h2>You won the whole game!</h2>
@@ -232,11 +192,8 @@ class HangmanView {
         </form>
         ';
     }
-
     private function gameHasEndedAddHighscore() {
-
         $this->highscore->addHighscore($_SESSION["username"], $_SESSION["solvedWords"], $_SESSION["totalAmountOfTries"]);
-
         unset($_SESSION["solvedWords"]);
         unset($_SESSION["totalAmountOfTries"]);
         unset($_SESSION["playerHasWon"]);

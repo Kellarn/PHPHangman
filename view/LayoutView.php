@@ -55,11 +55,10 @@ class LayoutView {
 
   private function checkWhichResponseToShow() {
 
-    if(isset($_GET["register"])) {
+    if(isset($_GET["login?register"])) {
 
       return $this->RegisterView->response();
     } else {
-
        return $this->LoginView->response();
     }
   }
@@ -83,7 +82,7 @@ class LayoutView {
   }
 
   private function renderBackButton() {
-    
+
     return '
     <form method="post" action="?">
 			<input type="submit" name="goToHangman" value="Back"/>

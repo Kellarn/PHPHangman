@@ -17,7 +17,7 @@ class Highscore{
 
         $query = "INSERT INTO highscore (playerName, solvedWords, totalAmountOfTries) VALUES (?,?,?)";
 
-        $stmt = mysqli_prepare(self::$link, $query);
+        $stmt = mysqli_prepare($this->link, $query);
         mysqli_stmt_bind_param($stmt, "sss", $param_playerName, $param_solvedWords, $param_totalAmountOfTries);
 
         $param_playerName = $playerName;

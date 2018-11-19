@@ -62,6 +62,11 @@ public function sql($username, $password){
     }
     mysqli_close($this->link);
 }
+
+public function isUserLoggedIn() {
+        
+    return isset($_SESSION["isLoggedIn"]);
+}
 }
 
 ?>

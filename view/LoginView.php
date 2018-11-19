@@ -32,18 +32,21 @@ class LoginView {
 	public function response() {
 
 		$message = '';
+
 		if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST[$this->login]) || isset($_POST[$this->logout]) ) {
 
 			if(isset($_POST[$this->logout])) {
 
 				session_destroy();
 				$_SESSION = [];
+
 				$message = "Bye bye!";
 				$response = $this->generateLoginFormHTML($message);
 			} else {
 				
 				$username = $this->postRequestUsername();
 				$password = $this->postRequestPassword();
+				$this->getUsername = $this->postRequestUserName();
 			    if(empty($username)) {
 
 					$message = "Username is missing";
@@ -56,7 +59,7 @@ class LoginView {
 
 				   $message = $this->loginModel->sql($this->postRequestUsername(), $this->postRequestPassword());
 				   $response = $this->generateLoginFormHTML($message);
-				   if(isset($_SESSION["isLoggedIn"])) {
+				   if($this->loginModel->isUserLoggedIn()) {
 
 					$response = $this->generateLogoutButtonHTML($message);
 				   }
@@ -65,13 +68,13 @@ class LoginView {
 		} else {
 			if(isset($_GET["login"])) {
 
-				if(isset($_SESSION["isLoggedIn"])) {
+				if($this->loginModel->isUserLoggedIn()) {
 
 					$response = $this->generateLogoutButtonHTML($message);
-				   } else {
+				} else {
 					   
 					$response = $this->generateLoginFormHTML($message);
-				   }
+				}
 			} else {
 
 				$response = $this->renderGoToLogin();
@@ -107,7 +110,7 @@ class LoginView {
 					<p id="' . $this->messageId . '">' . $message . '</p>
 					
 					<label for="' . $this->name . '">Username :</label>
-					<input type="text" id="' . $this->name . '" name="' . $this->name . '" />
+					<input type="text" id="' . $this->name . '" name="' . $this->name . '" value="' . $this->getUsername .'"/>
 
 					<label for="' . $this->password . '">Password :</label>
 					<input type="password" id="' . $this->password . '" name="' . $this->password . '" />
@@ -119,6 +122,12 @@ class LoginView {
 				</fieldset>
 			</form>
 		';
+	}
+
+	private function getRequestUserName() {
+		if($_GET[$this->name]){
+			return $_GET[$this->name];
+		}
 	}
 
 	private function postRequestPassword() {
@@ -134,7 +143,7 @@ class LoginView {
 	}
 	
 	public function renderGoToLogin() {
-		if(isset($_SESSION["isLoggedIn"])) {
+		if($this->loginModel->isUserLoggedIn()) {
 
 			return 
 			'

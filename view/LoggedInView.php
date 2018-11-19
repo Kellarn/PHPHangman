@@ -45,6 +45,14 @@ class LoggedInView {
         }
         return $response;
     }
+
+    private function getRequestWord() {
+
+        if($_SERVER["REQUEST_METHOD"] == "POST"){
+			return $_POST[$this->word];
+		}
+    }
+     
     private function addWordForm($message) {
 
         return '
@@ -58,18 +66,11 @@ class LoggedInView {
         </form>';
     }
 
-    private function getRequestWord() {
-
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
-			return $_POST[$this->word];
-		}
-    }
 
     private function renderPlayerHighscores() {
+        $highscores = [];
 
         if(isset($_SESSION["isLoggedIn"])) {
-
-                $highscores = [];
             if(isset($_SESSION["username"])) {
 
                 $highscores = $this->highScore->getPlayerHighscore($_SESSION["username"]);

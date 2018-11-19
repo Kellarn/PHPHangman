@@ -43,12 +43,12 @@ class MainLayoutView {
         $this->loginLayoutView = $this->loginController->renderPage();
         $this->hangmanView = "";
 
-    } else if(isset($_GET["register"]) || isset($_GET["login"])) {
+    } else if(isset($_GET["login?register"]) || isset($_GET["login"])) {
 
         $this->loginLayoutView = $this->loginController->renderPage();
         $this->hangmanView = "";
     } else {
-      
+
         $this->hangmanView = $this->hangmanController->renderHangmanPage();
         $this->loginLayoutView = $this->loginController->renderPage();
     }
