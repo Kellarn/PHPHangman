@@ -17,20 +17,6 @@ class Register{
 
         $this->link = $this->dbConnection->connection();
 
-        if(empty($userName) && empty($password) && empty($repeatPassword)){
-            return "Username has too few characters, at least 3 characters.";
-        } else if(empty($userName) || empty($password) || empty($repeatPassword)){
-            return "Password has too few characters, at least 6 characters.";
-        } else if(trim(strlen($userName)) < 3) {
-            return "Username has too few characters, at least 3 characters.";
-        } else if(!(strip_tags($userName) == $userName)){
-            return "Username contains invalid characters.";
-        } else if(trim(strlen($password)) < 6) {
-            return "Password has too few characters, at least 6 characters.";
-        } else if($password != $repeatPassword){
-            return "Passwords do not match.";
-        } else {
-
             $query = "INSERT INTO users (username, password) VALUES (?,?)";
             $stmt = mysqli_prepare($this->link, $query);
             mysqli_stmt_bind_param($stmt, "ss", $param_userName, $param_password);
@@ -46,6 +32,5 @@ class Register{
 
             mysqli_stmt_close($stmt);
             mysqli_close($this->link);
-        }
     }
 }

@@ -13,13 +13,12 @@ class MainLayoutView {
     {
         $this->hangmanController = $hangmanController;
         $this->loginController = $loginController;
-        // $_SESSION = [];
     }
   
   public function render() {
-    // $dateTimeView = $dtv->show();
+
     $this->checkWhatLoginToShow();
-    // $hangmanView = $this->hangmanController->renderHangmanPage();
+
     return '<!DOCTYPE html>
       <html>
         <head>
@@ -38,13 +37,18 @@ class MainLayoutView {
   }
 
   private function checkWhatLoginToShow() {
+
     if(isset($_POST["goToLogin"])) {
+
         $this->loginLayoutView = $this->loginController->renderPage();
         $this->hangmanView = "";
+
     } else if(isset($_GET["register"]) || isset($_GET["login"])) {
+
         $this->loginLayoutView = $this->loginController->renderPage();
         $this->hangmanView = "";
     } else {
+      
         $this->hangmanView = $this->hangmanController->renderHangmanPage();
         $this->loginLayoutView = $this->loginController->renderPage();
     }

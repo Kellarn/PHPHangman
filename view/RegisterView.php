@@ -3,80 +3,134 @@
 namespace view;
 
 class RegisterView {
-
-	private static $UserName = 'RegisterView::UserName';
-    private static $password = 'RegisterView::Password';
-    private static $repeatPassword = 'RegisterView::PasswordRepeat';
-    private static $getUsername = '';
-    private static $register = 'RegisterView::Register';
-    private static $Message = 'RegisterView::Message';
-    private static $userNameValue = '';
-
     private $registerModel;
+
+	private $username = 'RegisterView::username';
+    private $password = 'RegisterView::Password';
+    private $repeatPassword = 'RegisterView::PasswordRepeat';
+    private $register = 'RegisterView::Register';
+    private $message = 'RegisterView::Message';
+
+    private $getusername = '';
+    private $usernameValue = '';
+    private $inputIsCorrect = false;
+
     public function __construct(\model\Register $registerModel){
         $this->registerModel = $registerModel;
     }
 
-    public function showRegisterTag(){
-        if(isset($_GET["register"])){
-            return "<a href='?login'>Back to login</a>";
-          } else if(isset($_SESSION["isLoggedIn"])) {
-            return "";
-          } else {
-            return "<a href='?register'>Register a new user</a>";
-          }
-    }
-
-    public function response(){
+      public function response(){
         $message = '';
 
-        if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST[self::$register]){
-            self::$userNameValue = $this->getRequestUserName();
-            $message = $this->registerModel->addUserToDatabase($this->getRequestUserName(), $this->getRequestPassword(), $this->getRequestRepeatPassword());
+        if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST[$this->register]) {
+
+            $message = "";
+            $this->checkRegisterInput();
+
+            if(!$this->inputIsCorrect) {
+                
+                $message = $this->checkRegisterInput();
+            } else {
+
+                $message = $this->registerModel->addUserToDatabase($this->getRequestusername(), $this->getRequestPassword(), $this->getRequestRepeatPassword());
+            }
+
             $response = $this->generateRegisterHTML($message);
         } else {
+
             $response = $this->generateRegisterHTML($message);
         }
+
         return $response;
     }
 
-    private function generateRegisterHTML($message){
+    private function checkRegisterInput() {
+
+        $username = $this->getRequestusername();
+        $password = $this->getRequestPassword();
+        $repeatPassword = $this->getRequestRepeatPassword();
+
+        if(empty($username) && empty($password) && empty($repeatPassword)) {
+
+            return "username has too few characters, at least 3 characters.";
+        } else if(empty($username) || empty($password) || empty($repeatPassword)) {
+
+            return "Password has too few characters, at least 6 characters.";
+        } else if(trim(strlen($username)) < 3) {
+
+            return "username has too few characters, at least 3 characters.";
+        } else if(!(strip_tags($username) == $username)) 
+        {
+            return "username contains invalid characters.";
+        } else if(trim(strlen($password)) < 6) {
+
+            return "Password has too few characters, at least 6 characters.";
+        } else if($password != $repeatPassword) {
+
+            return "Passwords do not match.";
+        }
+
+        $this->inputIsCorrect = true;
+    }
+
+    private function getRequestusername(){
+		if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+			return $_POST[$this->username];
+		}
+    }
+    
+    private function getRequestPassword() {
+
+		if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+			return $_POST[$this->password];
+		}
+    }
+
+    private function getRequestRepeatPassword() {
+
+		if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+			return $_POST[$this->repeatPassword];
+		}
+    }
+    
+    private function generateRegisterHTML($message) {
+
         return '
             <h2>Register new user</h2>
 			<form method="post"> 
 				<fieldset>
                     <legend>Register a new user - Write username and password</legend>
-                    <p id="' . self::$Message . '">' . $message . '</p>
+                    <p id="' . $this->message . '">' . $message . '</p>
 
-					<label for="' . self::$UserName . '">Username :</label>
-					<input type="text" id="' . self::$UserName . '" name="' . self::$UserName . '" value="'. self::$userNameValue . '" />
+					<label for="' . $this->username . '">username :</label>
+					<input type="text" id="' . $this->username . '" name="' . $this->username . '" value="'. $this->usernameValue . '" />
 
-					<label for="' . self::$password . '">Password :</label>
-                    <input type="password" id="' . self::$password . '" name="' . self::$password . '" />
+					<label for="' . $this->password . '">Password :</label>
+                    <input type="password" id="' . $this->password . '" name="' . $this->password . '" />
                     
-                    <label for="' . self::$repeatPassword . '">Repeat password :</label>
-					<input type="password" id="' . self::$repeatPassword . '" name="' . self::$repeatPassword . '" />
+                    <label for="' . $this->repeatPassword . '">Repeat password :</label>
+					<input type="password" id="' . $this->repeatPassword . '" name="' . $this->repeatPassword . '" />
 					
-					<input type="submit" name="' . self::$register . '" value="Register" />
+					<input type="submit" name="' . $this->register . '" value="Register" />
 				</fieldset>
 			</form>
 		';
     }
 
-    private function getRequestPassword() {
-		if($_SERVER["REQUEST_METHOD"] == "POST"){
-			return $_POST[self::$password];
-		}
-    }
-    private function getRequestRepeatPassword() {
-		if($_SERVER["REQUEST_METHOD"] == "POST"){
-			return $_POST[self::$repeatPassword];
-		}
-	}
+    public function showRegisterTag() {
 
-	private function getRequestUserName(){
-		if($_SERVER["REQUEST_METHOD"] == "POST"){
-			return $_POST[self::$UserName];
-		}
-	}
+        if(isset($_GET["register"])) {
+            
+            return "<a href='?login'>Back to login</a>";
+          } else if(isset($_SESSION["isLoggedIn"])) {
+            
+            return "";
+          } else {
+            
+            return "<a href='?register'>Register a new user</a>";
+          }
+    }
 }
