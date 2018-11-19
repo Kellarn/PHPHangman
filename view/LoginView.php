@@ -1,8 +1,13 @@
 <?php
 
-// require_once("model/login.php");
 namespace view;
 
+ 	/**
+	 * Class for displaying the login part of the page.
+     * It has helper functions for GET and POST and different
+	 * string/html generation functions. 
+     * 
+	 */
 
 class LoginView {
 	private $loginModel;
@@ -66,6 +71,7 @@ class LoginView {
 			    }
 			}
 		} else {
+
 			if(isset($_GET["login"])) {
 
 				if($this->loginModel->isUserLoggedIn()) {

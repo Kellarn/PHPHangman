@@ -2,6 +2,15 @@
 
 namespace view;
 
+    /**
+	 * Class for displaying the register part of the site.
+     * It has functions for returning the HTML response
+     * to validate the provided information as well as
+     * helper functions for GET and POST, and some helper
+     * functions for generating HTML strings.
+     * 
+	 */
+
 class RegisterView {
     private $registerModel;
 

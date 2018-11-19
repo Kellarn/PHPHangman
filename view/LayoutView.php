@@ -25,7 +25,7 @@ class LayoutView {
   private $addWord;
 
   public function __construct(\view\LoginView $v, \view\DateTimeView $dtv, \view\RegisterView $rv, \view\LoggedInView $liv) {
-    
+
     $this->LoginView = $v;
     $this->DateTimeView = $dtv;
     $this->RegisterView = $rv;
@@ -49,28 +49,6 @@ class LayoutView {
     ';
   }
 
-  private function renderIsLoggedIn() {
-
-    if (isset($_SESSION["isLoggedIn"])) {
-
-      return '<h2>Logged in</h2>';
-    }
-    else {
-
-      return '<h2>Not logged in</h2>';
-    }
-  }
-
-  private function checkWhichResponseToShow() {
-
-    if(isset($_GET["login?register"])) {
-
-      return $this->RegisterView->response();
-    } else {
-       return $this->LoginView->response();
-    }
-  }
-
   private function checkWhatToRender() {
 
     $this->registerOrLogin =  $this->checkWhichResponseToShow();
@@ -86,6 +64,28 @@ class LayoutView {
 
       $this->registerTag = "";
       $this->backButton = "";
+    }
+  }
+
+  private function checkWhichResponseToShow() {
+
+    if(isset($_GET["login?register"])) {
+
+      return $this->RegisterView->response();
+    } else {
+       return $this->LoginView->response();
+    }
+  }
+
+  private function renderIsLoggedIn() {
+
+    if (isset($_SESSION["isLoggedIn"])) {
+
+      return '<h2>Logged in</h2>';
+    }
+    else {
+
+      return '<h2>Not logged in</h2>';
     }
   }
 
