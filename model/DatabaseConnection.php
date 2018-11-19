@@ -4,6 +4,12 @@ namespace model;
 
 require_once("environment.php");
 
+
+    /**
+	 * Class that connects to DB using env variables and checks the connection.
+	 *
+	 */
+
 class DatabaseConnection {
 
     private static $link;

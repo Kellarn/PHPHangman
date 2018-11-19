@@ -1,6 +1,15 @@
 <?php
 namespace view;
+
+/**
+	 * This class is the class for the whole hangman game. It is not great and I would have wanted to 
+     * refactor it quite a lot. It works, but it is not clean code.
+     * 
+	 * The class contains a lot of functions to display, check and run the game.
+	 *
+	 */
 class HangmanView {
+
     private $hangmanStates;
     private $hangmanWords;
     private $highscore;
@@ -11,6 +20,7 @@ class HangmanView {
     private $guessedLetters;
     private $guessed;
     private $which;
+
     public function __construct(\model\HangmanStates $hangmanStates, \model\GetHangmanWords $hangmanWords, \model\Highscore $highscore)
     {
         $this->hangmanStates = $hangmanStates;
@@ -19,7 +29,18 @@ class HangmanView {
         $this->wordsArray = [];
         $this->wordsArray = $this->hangmanWords->getWords();
     }
+
+    /**
+	 * Main display function that returns all the collected html strings that should be presented on the website. 
+     * 
+	 * Is called when a user the hangman part of the page should be displayed
+	 *
+	 * @return string html string to display when page is rendered
+     * This function takes 4 varibles that holds different values that should either be displayed
+     * or hidden to be able to post later on.
+	 */
 	private function show($guessedLetter, $wordAsUnderscore, $wrong, $currentWordAsIndex) {
+
         $guessForm = $this->guessForm($guessedLetter, $wrong, $currentWordAsIndex);
         return
         '<pre>' 
@@ -48,6 +69,15 @@ class HangmanView {
             </fieldset>
         </form>';
     }
+
+    /**
+	 * Function to check to current guessed letter and depending on the outcome
+     * display and record different views and variables. 
+     * 
+	 * Is called when the player has entered a letter and presses the guess button
+	 *
+	 * @return string containing what to display next depending on the guessed letter
+	 */
 
     private function checkGuess() {
 
@@ -105,16 +135,25 @@ class HangmanView {
                 return $this->playerHasWon($currentWordInGame, $amountOfWrongGuesses);
             } 
             else if($amountOfWrongGuesses == 6) {
-                $_SESSION["totalAmountOfTries"] += $amountOfWrongGuesses;
+                if(isset($_SESSION["totalAmountOfTries"]) && isset($_SESSION["solvedWords"])) {
+
+                    $_SESSION["totalAmountOfTries"] += $amountOfWrongGuesses;
+                } else {
+
+                    $_SESSION["totalAmountOfTries"] = $amountOfWrongGuesses;
+                    $_SESSION["solvedWords"] = 0;
+                }
                 $this->gameHasEndedAddHighscore();
                 return $this->playerHasLost($currentWordInGame, $letter);
             }
             else {
+
                 unset($_SESSION["playerHasWon"]);
                 return $this->show($this->guessedLetters, $wordAsUnderscore, $amountOfWrongGuesses, $currentWordAsIndex );
             }
         }
     }
+
     private function checkGuessedLetter($guessedLetters, $currentWordInGame) {
 
         $lengthOfTheWord = strlen($currentWordInGame);
@@ -131,6 +170,7 @@ class HangmanView {
         }
         return $currentGuess;
     }
+
     public function checkTheGame() {
 
         if(isset($_POST["Guess"])) {
@@ -140,15 +180,25 @@ class HangmanView {
 
             return $this->startGame();
         } else {
-            
+
             $response = $this->startGame();
             return $response;
         }
     }
+
+    /**
+	 * Function that is called when a new game is going to start.
+     * It calles the db to get all available words and then chooses 
+     * the word for the current game and then returns the page to be displayed.
+	 *
+	 * @return string the page to be displayed after the game is initiated. 
+	 */
     private function startGame() {
         if(isset($_SESSION["playerHasWon"])) {
+
             $this->wordsArray = $_SESSION["wordsArray"];
         } else {
+
             $this->wordsArray = $this->hangmanWords->getWords();
         }
         $this->guessedLetters = '';

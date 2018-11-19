@@ -13,7 +13,18 @@ class Register{
         $this->dbConnection = $dbc;
     }
 
-    public function addUserToDatabase($userName, $password, $repeatPassword){
+    /**
+	 * Connects to DB using DB model adds the user to the DB.
+     * Params are validated before sent to this function. 
+     * 
+	 * Is called when a user wants to register his user to be able to log in. 
+	 *
+	 * @return string message to display if the user could be added or not.
+     * @param username name of the user to log in.
+     * @param password password of the user to log in
+	 */
+
+    public function addUserToDatabase($userName, $password){
 
         $this->link = $this->dbConnection->connection();
 
@@ -34,7 +45,11 @@ class Register{
             mysqli_close($this->link);
     }
 
+    /**
+     * Small function to teturn the status of the session variable isLoggedIn
+     */
     public function isUserLoggedIn() {
+
         return isset($_SESSION["isLoggedIn"]);
     }
 }

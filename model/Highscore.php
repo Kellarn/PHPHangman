@@ -12,6 +12,17 @@ class Highscore{
         $this->dbConnection = $dbc;
     }
 
+    /**
+	 * Connects to DB using DB model and adds a highscore entry based on the player name, 
+	 * amount of solved words and the amount of tries. 
+     * 
+	 * Is called when the game has ended and the player has lost or won the whole game. 
+	 *
+	 * @return bool to show if it worked or not. 
+     * @param playerName name of the current logged in player
+     * @param solvedWords amount of solved words
+     * @param totalAmountOfTries total amount of tries during the whole game
+	 */
     public function addHighscore($playerName, $solvedWords, $totalAmountOfTries){
         $this->link = $this->dbConnection->connection();
 
@@ -26,15 +37,24 @@ class Highscore{
 
 
         if(mysqli_stmt_execute($stmt)){
-            return "Word added";
+            return true;
         } else {
-            return "Word already exists, please try with an other one.";
+            return false;
         }
 
         mysqli_stmt_close($stmt);
         mysqli_close($this->link);
     }
 
+    /**
+	 * Connects to DB using DB model and recives the top 3 highscores for the current
+     * logged in player.
+     * 
+	 * Is called when the the logged in user goes to his page. 
+	 *
+	 * @return array containing all higshcore entries for the current logged in player.
+     * @param username name of the player to recieve the highscores from
+	 */
     public function getPlayerHighscore($username){
         $this->highscores = [];
         $this->link = $this->dbConnection->connection();

@@ -2,9 +2,16 @@
 
 namespace view;
 
+  /**
+    * This is the class that ties togehther that parts of assignment two,
+    * login, register, dateTime and also addes the loggedIn view.
+    * This class checks what to render depending on different variables and then returns
+    * a string to be displayed on the page. 
+    * 
+	 */
+
 class LayoutView {
   
-
   private $LoginView;
   private $DateTimeView;
   private $RegisterView;
@@ -18,6 +25,7 @@ class LayoutView {
   private $addWord;
 
   public function __construct(\view\LoginView $v, \view\DateTimeView $dtv, \view\RegisterView $rv, \view\LoggedInView $liv) {
+    
     $this->LoginView = $v;
     $this->DateTimeView = $dtv;
     $this->RegisterView = $rv;

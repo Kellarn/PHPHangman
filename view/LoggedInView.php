@@ -2,13 +2,20 @@
 
 namespace view;
 
+/**
+	 * Class for displaying the logged in part of the page.
+     * It has functions for checking what to show, to show the highscore
+     * and to show the add word form. 
+     * 
+	 */
+
 class LoggedInView {
 
     private $highScore;
     private $addHangmanWords;
     private $highscores;
     private $add;
-    private $word;
+    private $word = "LoggedInView::Word";
 
     public function __construct(\model\AddHangmanWords $ahw, \model\Highscore $hs) {
         $this->addHangmanWords = $ahw;
@@ -30,14 +37,20 @@ class LoggedInView {
 
         $message = "";
         $response = "";
-        
-        if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST[$this->add])) {
+    
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $word = $this->getRequestWord();
-            $message = $this->addHangmanWords->addWord($word);
+            if(strlen($word) < 2) {
+
+                $message = "You need at least two letters to form a word, try again";
+            } else {
+
+                $message = $this->addHangmanWords->addWord($word);
+            }
             $response = $this->addWordForm($message);
         } else {
-
             if(isset($_SESSION["isLoggedIn"])) {
 
                 $response = $this->addWordForm($message);
@@ -48,7 +61,7 @@ class LoggedInView {
 
     private function getRequestWord() {
 
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
+        if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST[$this->word])){
 			return $_POST[$this->word];
 		}
     }
@@ -56,12 +69,12 @@ class LoggedInView {
     private function addWordForm($message) {
 
         return '
-        <form method="post" action="">
+        <form method="post">
            <fieldset>
              <legend>Type in a word to add to collection</legend>
              <p id="message">' . $message . '</p>
              <input type="text" name="'. $this->word .'" autofocus />
-             <input type="submit" name="'. $this->add .'" value="Add" /> 
+             <input type="submit" name="'. $this->add .'" value="Add"/> 
             </fieldset>
         </form>';
     }
@@ -94,12 +107,6 @@ class LoggedInView {
         } else {
 
             return "";
-        }
-    }
-    private function getHighscores() {
-
-        if(isset($_SESSION["username"])) {
-           $highscores = $this->highScore->getPlayerHighscore($_SESSION["username"]);
         }
     }
 }

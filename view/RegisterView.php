@@ -32,7 +32,7 @@ class RegisterView {
                 $message = $this->checkRegisterInput();
             } else {
 
-                $message = $this->registerModel->addUserToDatabase($this->postRequestusername(), $this->postRequestPassword(), $this->postRequestRepeatPassword());
+                $message = $this->registerModel->addUserToDatabase($this->postRequestusername(), $this->postRequestPassword());
             }
 
             $response = $this->generateRegisterHTML($message);

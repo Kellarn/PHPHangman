@@ -27,7 +27,7 @@ class LoginView {
 	 *
 	 * Should be called after a login attempt has been determined
 	 *
-	 * @return  void BUT writes to standard output and cookies!
+	 * @return  void BUT writes to standard output!
 	 */
 	public function response() {
 
@@ -57,7 +57,7 @@ class LoginView {
 					$response = $this->generateLoginFormHTML($message);
 			    } else {
 
-				   $message = $this->loginModel->sql($this->postRequestUsername(), $this->postRequestPassword());
+				   $message = $this->loginModel->loginUser($this->postRequestUsername(), $this->postRequestPassword());
 				   $response = $this->generateLoginFormHTML($message);
 				   if($this->loginModel->isUserLoggedIn()) {
 
@@ -122,12 +122,6 @@ class LoginView {
 				</fieldset>
 			</form>
 		';
-	}
-
-	private function getRequestUserName() {
-		if($_GET[$this->name]){
-			return $_GET[$this->name];
-		}
 	}
 
 	private function postRequestPassword() {

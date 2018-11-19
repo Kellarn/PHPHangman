@@ -11,7 +11,15 @@ class AddHangmanWords {
     public function __construct(\model\DatabaseConnection $dbc){
         $this->dbConnection = $dbc;
     }
- 
+
+    /**
+	 * Connects to DB using DB model and adds provided param word to DB.
+	 *
+	 * Should be called when a input is correct after checking in loggedinView.
+	 *
+	 * @return  string to be displayed from view.
+     * @param word the word to be added to DB.
+	 */
     public function addWord($word) {
         $this->link = $this->dbConnection->connection();
 
